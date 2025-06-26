@@ -1,0 +1,361 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewSystemApiModels
+@{
+    ViewData["Title"] = "API Method";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script>
+    function GetCreate() {
+
+        $("#CreateModal").modal()
+    }
+
+    function OpenConfirmDeleteModal(ReqID) {
+
+
+        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
+
+        $("#ConfirmDeleteModal").modal();
+
+    }
+
+    function OpenConfirmDeleteModal(ReqID) {
+
+
+        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
+
+        $("#ConfirmDeleteModal").modal();
+
+    }
+</script>
+<div class="wrap-content">
+    <div class="header">
+        <div class="nav-navigation">
+            <p>HOME</p>
+            <p>></p>
+            <p>ระบบัญชี/การเงิน</p>
+            <p>></p>
+            <p>ระบบัญชี/การเงิน</p>
+        </div>
+        <div class="header_content">
+            <h1>ระบบัญชี/การเงิน</h1>
+            <div id="Batch">
+                <div class="content_body">
+                    <div class="row">
+                        <div class="col-md-3 offset-md-3">
+                            <div>  <div><label>Method</label></div></div>
+
+                        </div>
+                      
+                        <div class="col-md-3">
+                          
+                            <select class ="form-control xx" name="cars" id="cars">
+
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+
+                            </select>
+                        </div>
+                       
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>End point:</label></div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <input class="form-control xx" type="text"  value="https://api.thecatapi.com/v1/images/search" />
+
+                        </div>
+
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>API-Key : </label></div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control xx" type="text" placeholder="Ex.  9cdfc631-35de-40b1-b855-2a91e8fcd921" />
+
+                        </div>
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>Request example : </label></div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <textarea id="w3review" name="w3review" rows="8" cols="100">
+  https://api.thecatapi.com/v1/images/search
+                            </textarea>
+                 
+                        </div>
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>Response example : </label></div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <textarea id="w3review" name="w3review" rows="8" cols="100">
+[
+  {
+    "id": "bj5",
+    "url": "https://cdn2.thecatapi.com/images/bj5.jpg",
+    "width": 500,
+    "height": 358
+  }
+]
+                            </textarea>
+
+                        </div>
+
+
+
+
+
+                    </div>
+
+                    <br />
+                    <div class="text-center m-t-10">
+
+                        <button class="btn btn_search text-color-botton m-r-10" id="submitSetupBatchTime" value="submitSetupBatchTime" runat="server" name="submitSetupBatchTime">Submit</button>
+                        <button class="btn btn_cancel ">Cancel</button>
+                    </div>
+
+
+                </div>
+                <div class="content_table">
+                    <div class="content_table_head d-flex align-items-center">
+                        <h6>รายการ API ระบบัญชี/การเงิน</h6>
+
+                    </div>
+                    <div class="line"></div>
+                   
+                    <div class="table-responsive">
+                        <table class=" table table-stand">
+                            <thead>
+                                <tr>
+
+
+                                    <th scope="col">#</th>
+
+
+                                    <th scope="col">Method</th>
+                                    <th scope="col">End Point</th>
+                                    <th scope="col">API Key</th>
+                                    <th scope="col">สถานะ</th>
+                                    <th scope="col">วันที่สร้าง</th>
+                                    <th scope="col">วันที่แก้ไขล่าสุด</th>
+                                    <th scope="col"> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+
+
+
+                                <tr>
+
+
+                                    <td class="align_text">
+                                        1
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        GET
+
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        https://api.thecatapi.com/v1/images/search
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        c6633541-65e9-43f7-bb4f-e543c3963815
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        ใช้งาน
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        24/11/2024 14:49:20
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        26/11/2024 09:49:20
+                                    </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-sm editbtn btn-primary" onclick="GetCreate()">
+                                            Edit
+                                        </button>
+                                        <input type="button" class="btn btn_cancel"
+                                               onclick="OpenConfirmDeleteModal()" name="btn_Delete" value="Delete">
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+
+
+                                    <td class="align_text">
+                                        2
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                      POST
+
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        https://api.thecatapi.com/v1/images/GetData
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        d1e43640-bd9c-40b2-ae59-7fcf9d011ec5
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        ใช้งาน
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        24/11/2024 14:49:20
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        26/11/2024 09:49:20
+                                    </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-sm editbtn btn-primary" onclick="GetCreate()">
+                                            Edit
+                                        </button>
+                                        <input type="button" class="btn btn_cancel"
+                                               onclick="OpenConfirmDeleteModal()" name="btn_Delete" value="Delete">
+                                    </td>
+
+
+                                </tr>
+
+                                <tr>
+
+                                    <td class="align_text">
+                                        3
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                       PUT
+
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        https://api.thecatapi.com/v1/images/1
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        ff7a4ef7-613c-414c-9c3b-4a7375ffbfe3
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        ปิดการใช้งาน
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        24/11/2024 14:49:20
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        26/11/2024 09:49:20
+                                    </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-sm editbtn btn-primary" onclick="GetCreate()">
+                                            Edit
+                                        </button>
+                                        <input type="button" class="btn btn_cancel"
+                                               onclick="OpenConfirmDeleteModal()" name="btn_Delete" value="Delete">
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+
+
+                                    <td class="align_text">
+                                        4
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                       DELETE
+
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        https://api.thecatapi.com/v1/images/001
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        9cdfc631-35de-40b1-b855-2a91e8fcd921
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        ใช้งาน
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        24/11/2024 14:49:20
+                                    </td>
+                                    <td class="align_text" style="width:auto">
+                                        26/11/2024 09:49:20
+                                    </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-sm editbtn btn-primary" onclick="GetCreate()">
+                                            Edit
+                                        </button>
+                                        <input type="button" class="btn btn_cancel"
+                                               onclick="OpenConfirmDeleteModal()" name="btn_Delete" value="Delete">
+                                    </td>
+
+
+                                </tr>
+                    
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="d-flex justify-content-end">
+
+                        <input type="hidden" name="hidcurrentpage" id="hidcurrentpage" value="1"></input>
+                        <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="10"></input>
+                        <!-- Start pagiantion -->
+                        <nav aria-label="Page navigation example ">
+                            <ul class="pagination pull-right layout_align m-t-10">
+
+                                <li class="page-item"><input type="submit" class="page-link" name="first" value="<<"></input></li>
+                                <li class="page-item"><input type="submit" class="page-link" name="previous" value="<"></input></li>
+
+                                <li class="page-item text_padding_nav"> 1 of 4</li>
+                                <li class="page-item"><input type="submit" class="page-link" name="next" value=">"></input></li>
+                                <li class="page-item"><input type="submit" class="page-link" name="last" value=">>"></input></li>
+
+                            </ul>
+                        </nav>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header  ">
+                <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
+
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card" style=" margin-top: 1px; ">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="CLeaveRequestModel_EmpCode">Are you sure you want to Delete this item?</label>
+                        <input type="hidden" id="TArrivalDetaiModels_Id" />
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer n-border" style="align-self: center;">
+                <button class="btn btn_search text-color-botton m-r-10" name="DeleteEmp" id="DeleteEmp" value="DeleteEmp">Submit</button>
+                <button class="btn btn_cancel ">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|d:\\git_project\\si_git_project\\si_apimanagement\\si_apimanagement\\sme_web_apimanagement\\sme_web_apimanagement\\views\\apireference\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|solutionrelative:sme_web_apimanagement\\views\\apireference\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|d:\\git_project\\si_git_project\\si_apimanagement\\si_apimanagement\\sme_web_apimanagement\\sme_web_apimanagement\\controllers\\apireferencecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|solutionrelative:sme_web_apimanagement\\controllers\\apireferencecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|d:\\git_project\\si_git_project\\si_apimanagement\\si_apimanagement\\sme_web_apimanagement\\sme_web_apimanagement\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|solutionrelative:sme_web_apimanagement\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|d:\\git_project\\si_git_project\\si_apimanagement\\si_apimanagement\\sme_web_apimanagement\\sme_web_apimanagement\\views\\apireference\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|solutionrelative:sme_web_apimanagement\\views\\apireference\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|d:\\git_project\\si_git_project\\si_apimanagement\\si_apimanagement\\sme_web_apimanagement\\sme_web_apimanagement\\views\\registerapi\\registerapidetail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|solutionrelative:sme_web_apimanagement\\views\\registerapi\\registerapidetail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|d:\\git_project\\si_git_project\\si_apimanagement\\si_apimanagement\\sme_web_apimanagement\\sme_web_apimanagement\\controllers\\registerapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|solutionrelative:sme_web_apimanagement\\controllers\\registerapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|d:\\git_project\\si_git_project\\si_apimanagement\\si_apimanagement\\sme_web_apimanagement\\sme_web_apimanagement\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98EED6F-9330-4A76-8DF6-86ED4065337B}|SME_WEB_ApiManagement\\SME_WEB_ApiManagement.csproj|solutionrelative:sme_web_apimanagement\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\ApiReference\\Index.cshtml",
+              "RelativeDocumentMoniker": "SME_WEB_ApiManagement\\Views\\ApiReference\\Index.cshtml",
+              "ToolTip": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\ApiReference\\Index.cshtml",
+              "RelativeToolTip": "SME_WEB_ApiManagement\\Views\\ApiReference\\Index.cshtml",
+              "ViewState": "AgIAAAIAAAAAAAAAAAApwFUAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-26T06:42:21.196Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApiReferenceController.cs",
+              "DocumentMoniker": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Controllers\\ApiReferenceController.cs",
+              "RelativeDocumentMoniker": "SME_WEB_ApiManagement\\Controllers\\ApiReferenceController.cs",
+              "ToolTip": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Controllers\\ApiReferenceController.cs",
+              "RelativeToolTip": "SME_WEB_ApiManagement\\Controllers\\ApiReferenceController.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAwEcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-26T06:40:41.266Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_LayoutAdmin.cshtml",
+              "DocumentMoniker": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "RelativeDocumentMoniker": "SME_WEB_ApiManagement\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "ToolTip": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "RelativeToolTip": "SME_WEB_ApiManagement\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-26T07:43:41.324Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Detail.cshtml",
+              "DocumentMoniker": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\ApiReference\\Detail.cshtml",
+              "RelativeDocumentMoniker": "SME_WEB_ApiManagement\\Views\\ApiReference\\Detail.cshtml",
+              "ToolTip": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\ApiReference\\Detail.cshtml",
+              "RelativeToolTip": "SME_WEB_ApiManagement\\Views\\ApiReference\\Detail.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-26T07:19:01.221Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RegisterAPIDetail.cshtml",
+              "DocumentMoniker": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\RegisterAPI\\RegisterAPIDetail.cshtml",
+              "RelativeDocumentMoniker": "SME_WEB_ApiManagement\\Views\\RegisterAPI\\RegisterAPIDetail.cshtml",
+              "ToolTip": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Views\\RegisterAPI\\RegisterAPIDetail.cshtml",
+              "RelativeToolTip": "SME_WEB_ApiManagement\\Views\\RegisterAPI\\RegisterAPIDetail.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAHQAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-26T06:51:26.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RegisterAPIController.cs",
+              "DocumentMoniker": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Controllers\\RegisterAPIController.cs",
+              "RelativeDocumentMoniker": "SME_WEB_ApiManagement\\Controllers\\RegisterAPIController.cs",
+              "ToolTip": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Controllers\\RegisterAPIController.cs",
+              "RelativeToolTip": "SME_WEB_ApiManagement\\Controllers\\RegisterAPIController.cs",
+              "ViewState": "AgIAABMBAAAAAAAAAAAAwDQBAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-26T06:49:09.574Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "SME_WEB_ApiManagement\\Controllers\\HomeController.cs",
+              "ToolTip": "D:\\Git_project\\SI_GIT_PROJECT\\SI_APIManagement\\SI_APIManagement\\SME_WEB_ApiManagement\\SME_WEB_ApiManagement\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "SME_WEB_ApiManagement\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-25T02:53:35.165Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

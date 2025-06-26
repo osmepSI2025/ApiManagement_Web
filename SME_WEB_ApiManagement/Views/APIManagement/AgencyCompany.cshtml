@@ -1,0 +1,336 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
+@{
+    ViewData["Title"] = "หน่วยงานหรือบริษัท";
+    var vDdlStatus = ViewBag.vDdlStatus;
+    var vDdlOrg = ViewBag.vDdlOrg;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<link rel="stylesheet" href="~/css/custom-api.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+    .close {
+        pointer-events: none;
+    }
+
+    .pagination-custom .btn {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 0;
+        font-size: 1.1rem;
+    }
+</style>
+
+<script>
+    function GetCreate() {
+        $("#CreateModal").modal("show");
+    }
+
+    $(document).on('click', '.editbtn', function () {
+        $("#InsMOrg_OrganizationId").val($(this).data("organizationid"));
+        // $("#InsMOrg_OrganizationCode").val($(this).data("organizationcode")).trigger('change');
+        $("#InsMOrg_OrganizationName").val($(this).data("organizationname"));
+        $("#InsMOrg_Description").val($(this).data("description"));
+        $("#InsMOrg_FlagActive").val($(this).data("flagactive"));
+        $("#CreateModal").modal("show");
+    });
+
+    $(document).on('click', '.btn_Delete', function () {
+        var orgId = $(this).data('organizationid');
+        if (!orgId) {
+            alert('ไม่พบข้อมูลที่จะลบ');
+            return;
+        }
+        if (confirm('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?')) {
+            $.ajax({
+                url: '@Url.Action("DeleteAgencyCompany", "APIManagement")',
+                type: 'POST',
+                data: { id: orgId },
+                success: function (res) {
+                    if (res.success) {
+                        alert('ลบสำเร็จ!');
+                        location.reload();
+                    } else {
+                        alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                    }
+                },
+                error: function () {
+                    alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '#DeleteData', function (e) {
+        e.preventDefault();
+        var orgId = $('#TArrivalDetaiModels_Id').val();
+        if (!orgId) {
+            Swal.fire('ผิดพลาด', 'ไม่พบข้อมูลที่จะลบ', 'error');
+            return;
+        }
+        Swal.fire({
+            title: 'ยืนยันการลบ',
+            text: "คุณต้องการลบข้อมูลนี้ใช่หรือไม่?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteAgencyCompany", "APIManagement")',
+                    type: 'POST',
+                    data: { id: orgId },
+                    success: function (res) {
+                        if (res.success) {
+                            Swal.fire('ลบสำเร็จ!', '', 'success').then(() => location.reload());
+                        } else {
+                            Swal.fire('ผิดพลาด', res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล', 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#saveData', function (e) {
+        // Validation
+        // var orgCode = $('#InsMOrg_OrganizationCode').val(); // ถ้ามี field นี้ให้ uncomment
+        var orgName = $('#InsMOrg_OrganizationName').val();
+        var errorMsg = "";
+        // if (!orgCode) errorMsg += "กรุณาเลือกหน่วยงานเจ้าของ API\n";
+        if (!orgName) errorMsg += "กรุณาระบุชื่อระบบ\n";
+        if (errorMsg) {
+            alert(errorMsg);
+            e.preventDefault();
+            return;
+        }
+
+        // Popup confirm ธรรมดา
+        if (!confirm('คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่?')) {
+            e.preventDefault();
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var btnLast = document.getElementById("btnLast");
+        if (btnLast) {
+            btnLast.addEventListener("click", function () {
+                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+            });
+        }
+    });
+
+    $(document).on('click', '#btnShowConfirmSave', function () {
+        $('#ConfirmSaveModal').modal('show');
+    });
+
+    $(document).on('click', '#btnConfirmSave', function () {
+        $('#CreateModal').closest('form').submit();
+        $('#ConfirmSaveModal').modal('hide');
+        $('#CreateModal').modal('hide');
+    });
+
+    $(document).ready(function () {
+        $('#InsMOrg_OrganizationCode').select2({
+            width: '100%',
+            placeholder: "กรุณาระบุ",
+            allowClear: true,
+            dropdownParent: $('#CreateModal') // Ensures the dropdown appears correctly inside the modal
+        });
+    });
+</script>
+
+@using (Html.BeginForm("AgencyCompany", "APIManagement", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+{
+    <div class="main-content">
+        <div class="wrap-boder">
+            <div class="wrap-content">
+                <div class="header">
+                  
+                    <div class="header_content">
+                        <h1>หน่วยงานหรือบริษัท</h1>
+                    </div>
+                </div>
+                <div class="content_body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>รหัสผู้ใช้บริการ</label>
+                            <input class="form-control" type="text" asp-for="MOrg.OrganizationCode" placeholder="Ex. ORG..." />
+                        </div>
+                        <div class="col-md-6">
+                            <label>ผู้ใช้บริการ</label>
+                            <input class="form-control" type="text" asp-for="MOrg.OrganizationName" placeholder="Ex. ฝ่าย..." />
+                        </div>
+                        <div class="col-md-6">
+                            <label>วันที่สร้าง</label>
+                            <input class="form-control" type="date" asp-for="MOrg.CreateDate" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>วันที่แก้ไขล่าสุด</label>
+                            <input class="form-control" type="date" asp-for="MOrg.UpdateDate" />
+                        </div>
+                    </div>
+                    <div class="text-center m-t-10">
+                        <button class="btn btn_search text-color-botton" name="searchData" id="searchData" value="searchData">ค้นหา</button>
+                        <button class="btn btn_search text-color-botton" name="clearSearcData" id="clearSearcData" value="clearSearcData">Clear</button>
+                    </div>
+                    <br /><br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="wrap-boder">
+            <div class="wrap-content">
+                <div class="content_table">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="card-title mb-0">รายการ หน่วยงานหรือบริษัท</div>
+                        <button type="button" class="btn btn-primary btn-custom" onclick="GetCreate();">
+                            <i class="fa fa-plus"></i> สร้าง
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="table-responsive">
+                        <table class="table table-stand">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>รหัสใช้บริการ</th>
+                                    <th>ผู้ใช้บริการ</th>
+                                    <th>สถานะ</th>
+                                    <th>วันที่สร้าง</th>
+                                    <th>วันที่แก้ไขล่าสุด</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.LOrg != null)
+                                {
+                                    var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
+                                    foreach (var w in Model.LOrg)
+                                    {
+                                        <tr>
+                                            <td class="align_text">@index</td>
+                                            <td class="align_text">@w.OrganizationCode</td>
+                                            <td class="align_text">@w.OrganizationName</td>
+                                            <td class="align_text">
+                                                @(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")
+                                            </td>
+                                            <td class="align_text">
+                                                @(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                            </td>
+                                            <td class="align_text">
+                                                @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" class="editbtn"
+                                                   data-organizationid="@w.OrganizationId"
+                                                   data-organizationcode="@w.OrganizationCode"
+                                                   data-organizationname="@w.OrganizationName"
+                                                   data-description="@w.Description"
+                                                   data-flagactive="@w.FlagActive">
+                                                    <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
+                                                </a>
+                                                <a href="javascript:void(0);" class="btn_Delete"
+                                                   data-organizationid="@w.OrganizationId"
+                                                   style="cursor: pointer;">
+                                                    <i class="fas fa-trash m-l-10 btn_delete-icon"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="trNodata">
+                                        <td colspan="12" valign="middle">
+                                            <b>No Data</b>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-footer">
+                        <div class="pagination-custom my-2">
+                            <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
+                                <i class="fa fa-angle-double-left"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
+                                <i class="fa fa-angle-left"></i>
+                            </button>
+                            <span class="mx-2">Page</span>
+                            <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly style="width: 40px; text-align: center;" />
+                            <span class="mx-2">of @Model.PageModel.TotalPage</span>
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light rounded-circle mx-1 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
+                                <i class="fa fa-angle-double-right"></i>
+                            </button>
+                        </div>
+                        <div class="my-2">
+                            แสดง @((Model.LOrg?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LOrg.Count()} จาก {Model.PageModel.TotalRows} รายการ" : "0 รายการ")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="CreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header" style="background-color: #2196f3; color: #fff; justify-content: center;">
+                    <h4 class="modal-title font-weight-bold" id="CreateModalLabel">หน่วยงานหรือบริษัท(ภายนอก)</h4>
+                </div>
+                <div class="modal-body px-5 py-4">
+               @*      <input type="hidden" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
+                    <div class="form-group mb-4">
+                        <label for="InsMOrg_OrganizationCode" class="font-weight-bold" style="font-size:1.3rem;">
+                            หน่วยงานเจ้าของ API <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="InsMOrg.OrganizationCode" asp-items="vDdlOrg" class="form-control search-dropdown" id="InsMOrg_OrganizationCode" style="font-size:1.1rem;">
+                            <option value="">--กรุณาเลือก--</option>
+                        </select>
+                    </div> *@
+                    <div class="form-group mb-4">
+                        <label for="InsMOrg_OrganizationName" class="font-weight-bold" style="font-size:1.3rem;">
+                            ชื่อหน่วยงานภายนอก <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" asp-for="InsMOrg.OrganizationName" id="InsMOrg_OrganizationName" placeholder="กรุณาระบุ" style="font-size:1.1rem;" />
+                    </div>
+                    <div class="form-group mb-4">
+                        <label class="font-weight-bold" style="font-size:1.3rem;">
+                            สถานะ <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="InsMOrg.FlagActive" id="InsMOrg_FlagActive" />
+                            <label class="form-check-label" for="InsMOrg_FlagActive" style="font-size:1.1rem;">
+                                ใช้งาน
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center border-0 pb-4">
+                    <button type="button" class="btn btn-outline-primary px-5 mr-3" data-bs-dismiss="modal" style="font-size:1.2rem;">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary px-5" name="saveData" id="saveData" value="saveData" style="font-size:1.2rem;">บันทึก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

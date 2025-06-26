@@ -1,0 +1,295 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewSystemApiModels
+@{
+    ViewData["Title"] = "API Inbound";
+    var vDdlStatus = ViewBag.vDdlStatus;
+    var vDdlOrg = ViewBag.vDdlOrg;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var EmployeeId = ViewBag.EmployeeId;
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+ 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    function GetCreate() {
+        $("#CreateModal").modal("show");
+    }
+
+    $(document).ready(function () {
+        $(".editbtn").click(function () {
+            var id = $(this).data("id");
+            var systemName = $("#InsMSystem_SystemName").val();
+            var flagActive = $(this).data("flagactive");
+            var ownerSystemCode = $(this).data("ownersystemcode");
+            $("#InsMSystem_Id").val(id);
+            $("#InsMSystem_SystemName").val(systemName);
+            $("#InsMSystem_OwnerSystemCode").val(ownerSystemCode).trigger('change');
+            // Properly set checkbox state for FlagActive
+            if (flagActive === true || flagActive === "True" || flagActive === "true") {
+                $("#InsMSystem_FlagActive").prop("checked", true);
+            } else {
+                $("#InsMSystem_FlagActive").prop("checked", false);
+            }
+            $("#CreateModal").modal("show");
+        });
+
+        $("#saveData").click(function (e) {
+            var ownerSystemCode = $("#InsMSystem_OwnerSystemCode").val();
+            var systemName = $("#InsMSystem_SystemName").val();
+
+            if (!ownerSystemCode || ownerSystemCode.trim() === "") {
+                alert("กรุณาเลือกหน่วยงานเจ้าของ API");
+                $("#InsMSystem_OwnerSystemCode").focus();
+                e.preventDefault();
+                return false;
+            }
+            if (!systemName || systemName.trim() === "") {
+                alert("กรุณาระบุชื่อระบบ");
+                $("#InsMSystem_SystemName").focus();
+                e.preventDefault();
+                return false;
+            }
+
+            var confirmed = confirm("คุณต้องการบันทึกข้อมูลใช่หรือไม่?");
+            if (!confirmed) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.search-dropdown').select2({
+            width: 'resolve',
+            placeholder: "กรุณาระบุ",
+            allowClear: true,
+            dropdownParent: $('#CreateModal') // ถ้าอยู่ใน modal
+        });
+    });
+</script>
+<script>
+    function deleteSystem(id) {
+        if (!confirm('คุณต้องการลบระบบนี้ใช่หรือไม่?')) {
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("DeleteSystem", "SysMasterAPI")',
+            type: 'POST',
+            data: { id: id },
+            success: function (res) {
+                if (res.success) {
+                    alert('ลบข้อมูลสำเร็จ');
+                    location.reload();
+                } else {
+                    alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                }
+            },
+            error: function () {
+                alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm("SysMasterAPIInbound", "SysMasterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+{
+    <div class="wrap-all-content"> 
+        <!-- Search Card -->
+        <div class="card-custom">
+            <div class="card-title">API Inbound</div>
+            <div class="row ">
+                <div class="col-md-6  ">
+                    <label class="form-label">ชื่อระบบ</label>
+                    <input class="form-control" type="text" asp-for="MSystem.SystemName" placeholder="กรุณาระบุ" />
+                </div>
+                <div class="col-md-6  ">
+                    <label class="form-label">สถานะ</label>
+                    <div class="input-group">
+                        <select asp-for="MSystem.FlagActive" asp-items="vDdlStatus" class="form-select">
+                            <option value="">กรุณาระบุ</option>
+                        </select>
+                       
+                    </div>
+                </div>
+                <div class="col-md-6  ">
+                    <label class="form-label">วันที่สร้าง</label>
+                    <div class="input-group">
+                        <input class="form-control" type="date" asp-for="MSystem.CreateDate" placeholder="กรุณาระบุ" />
+                    </div>
+                </div>
+                <div class="col-md-6  ">
+                    <label class="form-label">วันที่สิ้นสุด</label>
+                    <div class="input-group">
+                        <input class="form-control" type="date" asp-for="MSystem.UpdateDate" placeholder="กรุณาระบุ" />
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-2">
+                <button class="btn btn-outline-primary btn-custom" name="clearSearcData" id="clearSearcData" value="clearSearcData" type="submit">ล้างข้อมูล</button>
+                <button class="btn btn-primary btn-custom" name="searchData" id="searchData" value="searchData" type="submit">ค้นหา</button>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card-custom">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="card-title mb-0">รายการ Inbound API</div>
+                
+            </div>
+            <div class="line"></div>
+            <div class="table-responsive">
+                <table class="table table-custom table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ลำดับ</th>
+                            <th style="width:65%">ชื่อระบบ</th>
+                            <th >สถานะ API</th>
+                            <th >วันที่สร้าง</th>
+                            <th >วันที่แก้ไขล่าสุด</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LSystem != null && Model.LSystem.Any())
+                        {
+                            var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
+                            foreach (var w in Model.LSystem)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>
+                                        <a href="@Url.Action("SysMasterAPIConnectInbound", "SysMasterAPI", new { systemcode = w.SystemCode })" style="text-decoration: underline; color: #2196f3; cursor: pointer;">
+                                            @w.SystemName
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
+                                            @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")
+                                        </span>
+                                    </td>
+                                    <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
+                                    <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center">ไม่พบข้อมูล</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer">
+                <div class="pagination-custom">
+                    <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
+                        <i class="fa fa-angle-double-left"></i>
+                    </button>
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
+                        <i class="fa fa-angle-left"></i>
+                    </button>
+                    <span>Page</span>
+                    <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly />
+                    <span>of @Model.PageModel.TotalPage</span>
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
+                        <i class="fa fa-angle-right"></i>
+                    </button>
+                    <button type="submit" class="btn btn-light @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
+                        <i class="fa fa-angle-double-right"></i>
+                    </button>
+                </div>
+                <div>
+                    แสดง @((Model.LSystem?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LSystem.Count()} จาก {Model.PageModel.TotalRows} รายการ" : "0 รายการ")
+                </div>
+            </div>
+        </div>
+   </div>
+
+    <!-- Create/Edit Modal -->
+    <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="CreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="min-width: 40%;">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #2196f3;">
+                    <h5 class="modal-title text-white w-100 text-center" id="CreateModalLabel">สร้างระบบ API</h5>
+                </div>
+                <div class="modal-body py-4">
+                    <div class="container-fluid">
+                        <div class="col-md-6">
+                            <label class="form-label">หน่วยงานเจ้าของ API <span class="text-danger">*</span></label>
+                            <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-select search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
+                                <option value="">กรุณาระบุ</option>
+                            </select>
+                        </div>
+                        <div class="row mb-6">
+                            <input class="form-control" type="hidden" asp-for="InsMSystem.Id" id="InsMSystem_Id" />
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">ชื่อระบบ<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" asp-for="InsMSystem.SystemName" placeholder="กรุณาระบุ" id="InsMSystem_SystemName" />
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label">สถานะ <span class="text-danger">*</span></label>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" name="InsMSystem.FlagActive" id="InsMSystem_FlagActive"
+                                           @(Model.InsMSystem.FlagActive == true ? "checked" : "") value="true" />
+                                    <label class="form-check-label" for="InsMSystem_FlagActive">ใช้งาน</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-4">
+                            <input type="hidden" asp-for="InsMSystem.CreateBy" value="@EmployeeId" />
+                            <input type="hidden" asp-for="InsMSystem.UpdateBy" value="@EmployeeId" />
+                            <button type="button" class="btn btn-outline-primary btn-custom mx-2" onclick="$('#CreateModal').modal('hide')">ยกเลิก</button>
+                            <button type="submit" class="btn btn-primary btn-custom mx-2" name="saveData" id="saveData" value="saveData">บันทึก</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Confirm Delete Modal -->
+    <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="min-width: 40%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                        <span class="x-sign" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card" style="margin-top: 1px;">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Are you sure you want to Delete this item?</label>
+                            <input type="hidden" id="TArrivalDetaiModels_Id" asp-for="MSystem.Id" />
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer n-border" style="align-self: center;">
+                    <button class="btn btn_search text-color-botton m-r-10" name="DeleteData" id="DeleteData" value="DeleteData">Submit</button>
+                    <button class="btn btn_cancel" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var btnLast = document.getElementById("btnLast");
+        if (btnLast) {
+            btnLast.addEventListener("click", function () {
+                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+            });
+        }
+    });
+</script>

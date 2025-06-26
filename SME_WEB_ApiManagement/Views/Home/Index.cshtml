@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = "Landing Page....";
+    // var sessionName = new Byte[20];
+    // bool nameOK = Context.Session.TryGetValue("fullname", out sessionName);
+  
+    // string result = "";
+    // if (nameOK)
+    // {
+    //     result = System.Text.Encoding.UTF8.GetString(sessionName);
+    // }
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Dictionary<string, string>? claimsDict = null;
+    if (ViewBag.claimsDict is string claimsJson && !string.IsNullOrEmpty(claimsJson))
+    {
+        claimsDict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(claimsJson);
+    }
+    var EmpDetail = ViewBag.EmpDetail;
+}
+@* @if (claimsDict != null && claimsDict.Any())
+{
+    <ul>
+        @foreach (var claim in claimsDict)
+        {
+            <li><strong>@claim.Key</strong>: @claim.Value</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No claims found in session.</p>
+}
+
+@if (EmpDetail != null)
+{
+    <h3>Employee Details</h3>
+    <ul>
+   
+        <li><strong>Email:</strong> @EmpDetail.Email</li>
+        <li><strong>Name (TH):</strong> @EmpDetail.NameTh</li>
+        <li><strong>Name (EN):</strong> @EmpDetail.NameEn</li>
+        <li><strong>Employee ID:</strong> @EmpDetail.EmployeeId</li>
+        <li><strong>RoleCode ID:</strong> @EmpDetail.RoleCode</li>
+      
+    </ul>
+}
+else
+{
+    <p>No employee details found.</p>
+} *@
+<style>
+    .card-box div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .card-container {
+        display: flex;
+        min-height: 90vh;
+        width: 100%;
+        flex-direction: column;
+        top: 100px;
+        left: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .card-box {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+        margin: 1rem 0;
+    }
+
+        .card-box a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px #fc6f33;
+            padding: 1.5rem 0;
+            text-decoration: none;
+        }
+
+            .card-box a:hover:before {
+                inset: -3px;
+            }
+
+            .card-box a:hover::after {
+                inset: -4px;
+                filter: blur(5px);
+            }
+
+
+            .card-box a::before,
+            .card-box a::after {
+                content: '';
+                background: linear-gradient(40deg, #fc6f33, transparent, #fc6f33);
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                transition: .5s;
+                border-radius: 6px;
+            }
+
+            .card-box a span {
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                letter-spacing: 2px;
+                color: #202842;
+                font-weight: bold;
+                border-radius: 5px;
+            }
+
+        .card-box img {
+            width: 50%;
+        }
+</style>
+<div class="wrap-boder">
+    <div class="wrap-content">
+        <div class="header_content">
+            <h1>Landing Page.... API Management</h1>
+        </div>
+        <div class="container">
+            <div class="header">
+               
+              
+            </div>
+        </div>
+       @if(EmpDetail !=null)
+       {
+            <div class="row ">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="card-box">
+                        <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPIInbound">
+                            <div>
+                                <img src="~/img/system.png" alt="">
+                                <span>API Inbound</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 .col-sm-12">
+                    <div class="card-box">
+                        <a id="PicEmp" href="../RegisterAPI/RegisterList" runat="server">
+                            <div>
+                                <img src="~/img/registered.png" alt="">
+                                <span>API Outbound</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                @*          <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="card-box">
+                <a href="../APIManagement/Index" runat="server">
+                    <div>
+                        <img src="~/img/gear.png" alt="">
+                        <span>API Management and permission</span>
+                    </div>
+                </a>
+                </div>
+            </div> *@
+                  <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="card-box">
+                        <a href="../ErrorApi/Index" id="Errorstatus" runat="server">
+                        <div>
+                            <img src="~/img/error.png" alt="">
+                            <span>Error list</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="card-box">
+                        <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPI">
+                            <div>
+                                <img src="~/img/business_1.png" alt="">
+                                <span>Api System Master</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+                @*   <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="card-box">
+                    <a href="../ManualUpload/ManualUpload" id="ManualUpload" runat="server">
+                        <div>
+                            <img src="~/img/download.png" alt="">
+                            <span>API Report</span>
+                        </div>
+                    </a>
+                </div>
+            </div> *@
+                @* 
+            <div class="col-lg-3 col-md-6 .col-sm-12">
+                <div class="card-box">
+                    <a href="../UserManagement/index" id="UserManagement" runat="server">
+                        <div>
+                            <img src="~/img/User.png" alt="">
+                            <span>User Management</span>
+                        </div>
+                    </a>
+                </div>
+            </div> *@
+            </div>
+       }
+       
+    </div>
+</div>

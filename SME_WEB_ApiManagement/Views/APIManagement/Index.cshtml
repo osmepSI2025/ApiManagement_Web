@@ -1,0 +1,485 @@
+﻿@{
+    ViewData["Title"] = "API Management and Permission";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script>
+    function GetCreate() {
+
+        $("#CreateModal").modal()
+    }
+
+    function OpenConfirmDeleteModal(ReqID) {
+
+
+        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
+
+        $("#ConfirmDeleteModal").modal();
+
+    }
+
+    function OpenConfirmDeleteModal(ReqID) {
+
+
+        document.getElementById("TArrivalDetaiModels_Id").value = ReqID;
+
+        $("#ConfirmDeleteModal").modal();
+
+    }
+</script>
+<div class="wrap-boder">
+    <div class="wrap-content">
+        <div class="header">
+            <div class="nav-navigation">
+                <p>HOME</p> <p>></p>
+                <p>API Management</p>
+            </div>
+            <div class="header_content">
+                <h1>API Management</h1>
+            </div>
+        </div>
+        <div class="content_body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div><label>ผู้ใช้บริการ</label></div>
+                    <input class="form-control" type="text" placeholder="Ex. ระบบ..." />
+                </div>
+
+                <div class="col-md-6">
+                    <div><label>ชื่อระบบ</label></div>
+                    <input class="form-control" type="text" placeholder="Ex. ระบบ..." />
+                </div>
+
+
+                <div class="col-md-6">
+                    <div><label>From Date</label></div>
+                    <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" />
+                </div>
+                <div class="col-md-6">
+                    <div><label>To Date</label></div>
+                    <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" />
+                </div>
+            </div>
+            <div class="text-center m-t-10">
+                <button class="btn btn_search text-color-botton" name="searchStage" id="searchStage" value="searchStage">ค้นหา</button>
+                @*                 <button class="btn btn_search text-color-botton" name="exportStage" id="exportStage" value="exportStage"> <span class="icon_button"> <img src="../img/export.png" alt="Description" /> </span> Export Data</button>
+                *@
+            </div>
+            <br />
+
+            <br />
+            <div class="content_table">
+                <div class="content_table_head d-flex align-items-center">
+                    <h6>รายการ API Management</h6>
+
+                </div>
+                <div class="line"></div>
+              
+                <div class="table-responsive">
+                    <table class=" table table-stand">
+                        <thead>
+                            <tr>
+
+
+                                <th scope="col">#</th>
+
+
+                                <th scope="col">ผู้ใช้บริการ</th>
+                                <th scope="col">API Key</th>
+                                <th scope="col">สถานะ</th>
+                                <th scope="col">วันที่ลงทพเบียน</th>
+                                <th scope="col">วันที่แก้ไขล่าสุด</th>
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+
+
+                            <tr>
+
+
+                                <td class="align_text">
+                                    1
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")">สำนักงานเศรษฐกิจอุตสาหกรรม</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    c6633541-65e9-43f7-bb4f-e543c3963815
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+                               
+
+                            </tr>
+                            <tr>
+
+
+                                <td class="align_text">
+                                    2
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                  
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")">  สำนักงานเศรษฐกิจการคลัง</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    d1e43640-bd9c-40b2-ae59-7fcf9d011ec5
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+                            
+
+
+                            </tr>
+
+                            <tr>
+
+                                <td class="align_text">
+                                    3
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                   
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")"> สำนักงานเศรษฐกิจการเกษตร</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ff7a4ef7-613c-414c-9c3b-4a7375ffbfe3
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ปิดการใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+                             
+
+
+                            </tr>
+                            <tr>
+
+
+                                <td class="align_text">
+                                    4
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")"> กรมเอเชียตะวันออก กระทรวงการต่างประเทศ</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    9cdfc631-35de-40b1-b855-2a91e8fcd921
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+
+
+                            </tr>
+                            <tr>
+
+
+                                <td class="align_text">
+                                    5
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")">กรมส่งเสริมการค้าระหว่างประเทศ</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    1829ff10-e675-4709-aac8-6b70d496a224
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+                              
+
+
+                            </tr>
+                            <tr>
+
+                                <td class="align_text">
+                                    6
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                  
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")">  กรมเศรษฐกิจระหว่างประเทศ กระทรวงการต่างประเทศ</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    c132c71f-68ce-41b3-b939-e776c2823963
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+                            
+
+
+                            </tr>
+                            <tr>
+
+                                <td class="align_text">
+                                    7
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                   
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")"> กรมเจรจาการค้าระหว่างประเทศ กระทรวงพาณิชย์</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    9cf40086-c178-42fa-a797-b12dd65fbd3b
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+                              
+
+                            </tr>
+                            <tr>
+
+
+                                <td class="align_text">
+                                    8
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                 
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")">กระทรวงอุตสาหกรรม</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    3dce41d6-2885-493e-b7d5-5e535d802f9b
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+
+
+                            </tr>
+                            <tr>
+
+
+                                <td class="align_text">
+                                    9
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                   
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")"> กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    cd1d81e0-76a5-4684-b10b-0ababba28923
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+                                
+
+
+                            </tr>
+                            <tr>
+
+
+                                <td class="align_text">
+                                    10
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                   
+                                    <a href="@Url.Action("SubApiManagement", "APIManagement")"> กระทรวงพาณิชย์</a>
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    8b32ee1c-117b-47e1-9d92-6d46a1b74b83
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    ใช้งาน
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    24/11/2024 14:49:20
+                                </td>
+                                <td class="align_text" style="width:auto">
+                                    26/11/2024 09:49:20
+                                </td>
+
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="d-flex justify-content-end">
+
+                    <input type="hidden" name="hidcurrentpage" id="hidcurrentpage" value="1"></input>
+                    <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="10"></input>
+                    <!-- Start pagiantion -->
+                    <nav aria-label="Page navigation example ">
+                        <ul class="pagination pull-right layout_align m-t-10">
+
+                            <li class="page-item"><input type="submit" class="page-link" name="first" value="<<"></input></li>
+                            <li class="page-item"><input type="submit" class="page-link" name="previous" value="<"></input></li>
+
+                            <li class="page-item text_padding_nav"> 1 of 10</li>
+                            <li class="page-item"><input type="submit" class="page-link" name="next" value=">"></input></li>
+                            <li class="page-item"><input type="submit" class="page-link" name="last" value=">>"></input></li>
+
+                        </ul>
+                    </nav>
+                </div>
+
+
+
+
+            </div>
+
+            @*   <div class="text-center m-t-10">
+            <button class="btn btn_search text-color-botton m-r-10" id="Resend" name="Resend" value="Resend" onclick="submitSelected()">Resend All</button>
+            <button class="btn btn_cancel ">Cancel</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header  ">
+                <h5 class="modal-title" id="reqDetailModalLabel">System Master Management</h5>
+
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card" style=" margin-top: 1px; ">
+
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>ชื่อระบบ</label>
+                                <input class="form-control" type="text" placeholder="Ex. ระบบ.." />
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>API-Key</label>
+                                <input class="form-control" placeholder="Ex. c6633541-65e9-43f7-bb4f-e543c3963815" type="text" />
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>สถานะ</label>
+                                <select class="form-control" name="cars" id="cars">
+
+                                    <option value="Completed">ใช้งาน</option>
+                                    <option value="Uncompleted">ปิดการใช้งาน</option>
+
+
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer n-border" style="align-self: center;">
+                <button class="btn btn_search text-color-botton m-r-10" value="saveEmp" id="saveEmp" name="saveEmp">Submit</button>
+                <button class="btn btn_cancel ">Cancel</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header  ">
+                <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
+
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card" style=" margin-top: 1px; ">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="CLeaveRequestModel_EmpCode">Are you sure you want to Delete this item?</label>
+                        <input type="hidden" id="TArrivalDetaiModels_Id" />
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer n-border" style="align-self: center;">
+                <button class="btn btn_search text-color-botton m-r-10" name="DeleteEmp" id="DeleteEmp" value="DeleteEmp">Submit</button>
+                <button class="btn btn_cancel ">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

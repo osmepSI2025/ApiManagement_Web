@@ -1,0 +1,123 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
+@{
+    ViewData["Title"] = "Register API";
+
+    var vDdlStatus = @ViewBag.vDdlStatus;
+    var vDdlOrg = @ViewBag.vDdlOrg;
+
+}
+@using (Html.BeginForm("RegisterAPI", "RegisterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+{<div class="main-content">
+    <div class="wrap-boder">
+    <div class="wrap-content">
+        <div class="header">
+            <div class="nav-navigation">
+                <p class="m-r-10">HOME </p>
+                <p>></p>
+                <p class="m-l-10"> Register API</p>
+            </div>
+            <div class="header_content">
+                <h1>Register API</h1>
+                <div id="Batch">
+                    <div class="content_body">
+                        <div class="row">
+                            <div class="col-md-3 ">
+                                <div><label>หน่วยงานที่ขอใช้ :</label></div>
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <select asp-for="MRegister.OrganizationCode" asp-items="vDdlOrg" class="form-control">
+                                    <option value="">-- กรุณาเลือก --</option>
+                                </select>
+
+                            </div>
+                                </div>
+                                <div class="row">
+                            <div class="col-md-3 ">
+                                        <div><label>ระยะเวลาการใช้งาน :</label></div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">เริ่มต้น</span>
+                                    </div>
+                                    <input class="form-control" type="date" asp-for="MRegister.StartDate" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">สิ้นสุด</span>
+                                    </div>
+                                    <input class="form-control" type="date" asp-for="MRegister.EndDate" />
+                                </div>
+                            </div>
+                                </div>
+                                <div class="row">
+                            <div class="col-md-3 "> 
+                                <div><label>ระบบที่ใช้ : </label></div>
+
+                            </div>
+                            <div class="col-md-9">
+                                        <div class="row">
+                                @for (var i = 0; i < Model.LSystem.Count; i++)
+                                {
+                                    <div class="col-md-3 pl-0 b-loop">
+                                        <input type="hidden" asp-for="LSystem[i].SystemCode" />
+                                        <input type="hidden" asp-for="LSystem[i].SystemName" />
+
+                                        <input type="checkbox" asp-for="LSystem[i].IsSelected" />
+                                        <label class="labelloop">@Model.LSystem[i].SystemName</label>
+                                    </div>
+                                }
+                                    </div>
+                            </div>
+                            <div class="col-md-3 ">
+                                <div><label>หมายเหตุ : </label></div>
+
+                            </div>
+                            <div class="col-md-6">
+                                        <textarea id="w3review" name="w3review" class="form-control" placeholder="Enter your text here...">
+
+                                </textarea>
+
+                            </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 ">
+                                        <div><label>สถานะ : </label></div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                       <input type="checkbox"/>
+                                        <label> ใช้งาน </label>
+
+                                    </div>
+                                </div>
+
+
+
+                       
+
+                        <br />
+                        <div class="text-center m-t-10">
+
+                                    <button class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData">บันทึก</button>
+                                    <button class="btn btn_cancel ">ยกเลิก</button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+    </div>
+}
+

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Deploy\SME\SI\Deploy20250624\SI_Web_ApiManagement_20250624_v1</_PublishTargetUrl>
+    <History>True|2025-06-24T03:40:41.5578546Z||;True|2025-06-23T10:05:18.0172514+07:00||;True|2025-06-19T15:06:21.8374923+07:00||;True|2025-06-19T15:03:15.2670767+07:00||;True|2025-06-19T15:00:49.9442178+07:00||;True|2025-06-19T14:30:51.6690914+07:00||;True|2025-06-19T13:34:36.0112104+07:00||;True|2025-06-19T13:24:33.0223332+07:00||;True|2025-06-19T09:24:29.0580705+07:00||;True|2025-06-18T17:45:36.6174756+07:00||;True|2025-06-09T18:49:00.5899981+07:00||;True|2025-06-07T13:26:00.4062721+07:00||;True|2025-05-30T08:36:12.7129435+07:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

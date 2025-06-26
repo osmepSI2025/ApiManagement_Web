@@ -1,0 +1,99 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
+@{
+    ViewData["Title"] = "API Reference";
+    var vDdlStatus = ViewBag.vDdlStatus;
+    var vDdlOrg = ViewBag.vDdlOrg;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    .btn_search {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+    }
+
+    .text-color-botton {
+        color: #fff !important;
+    }
+
+    .m-r-10 {
+        margin-right: 10px;
+    }
+
+    .btn_cancel {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .form-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 2rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    body, .container {
+        background: #fff !important;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row mb-3">
+        <div class="col-md-1 text-end">
+            <label class="col-form-label">API :</label>
+        </div>
+        <div class="col-md-9">
+            <div class="accordion" id="checkboxAccordion">
+                @{
+                    var grouped = Model.LApi.GroupBy(x => x.SystemName).ToList();
+                    int groupIndex = 0;
+                }
+                @foreach (var group in grouped)
+                {
+                    var collapseId = $"collapse{groupIndex}";
+                    var headingId = $"heading{groupIndex}";
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header" id="@headingId">
+                            <button class="accordion-button @(groupIndex > 0 ? "collapsed" : "")" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                                @group.Key
+                            </button>
+                        </h2>
+                        <div id="@collapseId" class="accordion-collapse collapse @(groupIndex == 0 ? "show" : "")" data-bs-parent="#checkboxAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    @{
+                                        int itemIndex = 1;
+                                    }
+                                    @foreach (var item in group)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="mb-2 d-flex align-items-center">
+                                                <span class="me-2">@itemIndex.</span>
+                                                <a href="@Url.Action("Detail", "ApiReference", new { id = item.SystemApiMappingId })">
+                                                    @item.ServiceName
+                                                </a>
+                                            </div>
+                                        </div>
+                                        itemIndex++;
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    groupIndex++;
+                }
+            </div>
+        </div>
+    </div>
+    
+</div>

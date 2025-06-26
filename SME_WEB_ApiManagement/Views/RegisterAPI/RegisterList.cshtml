@@ -1,0 +1,379 @@
+﻿@model SME_WEB_ApiManagement.Models.ViewRegisterApiModels
+@{
+    ViewData["Title"] = "API Outbound";
+    var vDdlStatus = ViewBag.vDdlStatus;
+    var vDdlOrg = ViewBag.vDdlOrg;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var EmployeeId = ViewBag.EmployeeId;
+}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+    /* Fix Select2 dropdown z-index in Bootstrap modal */
+    .modal .select2-container {
+        z-index: 1055 !important;
+    }
+
+    .modal .select2-dropdown {
+        z-index: 1060 !important;
+    }
+</style>
+<script>
+    // Initialize Select2 with dropdownParent for modal
+    function initSelect2Modal() {
+        $('#OrganizationCode').select2({
+            width: '100%',
+            placeholder: "--กรุณาเลือก--",
+            allowClear: true,
+            dropdownParent: $('#CreateEditModal')
+        });
+    }
+
+    $(document).ready(function () {
+        initSelect2Modal();
+    });
+
+    // Fix Bootstrap 4 + Select2: allow modal to close when using Select2
+    $('#CreateEditModal').on('show.bs.modal', function () {
+        var modal = $(this);
+        var enforceModalFocusFn = $.fn.modal.Constructor.prototype._enforceFocus;
+        $.fn.modal.Constructor.prototype._enforceFocus = function() {
+            if (modal.hasClass('show')) return;
+            enforceModalFocusFn.apply(this, arguments);
+        };
+    });
+
+    // Fix: Select2 inside Bootstrap modal - allow modal to close on cancel
+    $(document).on('select2:open', () => {
+        document.querySelectorAll('.select2-search__field').forEach((el) => {
+            el.focus();
+        });
+    });
+
+    $('#CreateEditModal').on('shown.bs.modal', function () {
+        // Remove enforced focus to allow Select2 to work with modal
+        $(document).off('focusin.modal');
+    });
+
+    // Fix Bootstrap 4 + Select2: allow modal to close when using Select2
+    $('#CreateEditModal').on('show.bs.modal', function () {
+        // Override enforceFocus only for this modal
+        var modal = $(this);
+        var enforceModalFocusFn = $.fn.modal.Constructor.prototype._enforceFocus;
+        $.fn.modal.Constructor.prototype._enforceFocus = function() {
+            if (modal.hasClass('show')) return;
+            enforceModalFocusFn.apply(this, arguments);
+        };
+    });
+
+    // เปิด modal สำหรับสร้าง
+    function GetCreate() {
+        $('#CreateEditModalLabel').text('สร้างข้อมูล API Outbound');
+        $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
+        $('#RegisterId').val('');
+        $('#OrganizationCode').val('').trigger('change');
+        $('#FlagActive').val('true');
+        $('#StartDate').val('');
+        $('#EndDate').val('');
+        $('#CreateBy').val('');
+        $('#UpdateBy').val('');
+        $('#CreateEditModal').modal('show');
+    }
+
+    // เปิด modal สำหรับแก้ไข
+    function GetEdit(register) {
+        $('#CreateEditModalLabel').text('แก้ไขข้อมูล API Outbound');
+        $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
+        $('#RegisterId').val(register.RegisterId || '');
+        $('#OrganizationCode').val(register.OrganizationCode || '').trigger('change');
+        $('#FlagActive').val(register.FlagActive ? 'true' : 'false');
+        $('#StartDate').val(register.StartDate ? register.StartDate.substring(0, 10) : '');
+        $('#EndDate').val(register.EndDate ? register.EndDate.substring(0, 10) : '');
+        $('#CreateBy').val(register.CreateBy || '');
+        $('#UpdateBy').val(register.UpdateBy || '');
+        $('#CreateEditModal').modal('show');
+    }
+
+    // เปิด modal สำหรับยืนยันการลบ
+    function OpenConfirmDeleteModal(registerId) {
+        $('#TArrivalDetaiModels_Id').val(registerId);
+        $('#ConfirmDeleteModal').modal('show');
+    }
+</script>
+@using (Html.BeginForm("RegisterList", "RegisterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+{
+    <div class="main-content">
+        <div class="wrap-boder">
+            <div class="wrap-content">
+                 <div class="card-title">API Outbound</div>
+                <div class="content_body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div><label>ผู้ระบบ</label></div>
+                            <input class="form-control" type="text" placeholder="Ex. ผู้ใช้บริการ..." name="MRegister.OrganizationName" asp-for="MRegister.OrganizationName" />
+                        </div>
+                        <div class="col-md-6">
+                            <div><label>API-Key</label></div>
+                            <input class="form-control" type="text" placeholder="Ex. ระบบ..." name="MRegister.ApiKey" asp-for="MRegister.ApiKey" />
+                        </div>
+                        <div class="col-md-6">
+                            <div><label>วันที่ลงทะเบียน</label></div>
+                            <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.StartDate" asp-for="MRegister.CreateDate" />
+                        </div>
+                        <div class="col-md-6">
+                            <div><label>วันที่แก้ไขล่าสุด</label></div>
+                            <input class="form-control" type="date" placeholder="Ex.dd/MM/yyyy" name="MRegister.EndDate" asp-for="MRegister.UpdateDate" />
+                        </div>
+                    </div>
+                    <div class="text-center m-t-10">
+                  @*       <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ล้างข้อมูล</button>
+                        <button class="btn btn_search text-color-botton" name="searchDate" id="searchDate" value="searchDate">ค้นหา</button> *@
+                        <button class="btn btn-outline-primary btn-custom" name="clearSearcData" id="clearSearcData" value="clearSearcData" type="submit">ล้างข้อมูล</button>
+                        <button class="btn btn-primary btn-custom" name="searchDate" id="searchDate" value="searchDate" type="submit">ค้นหา</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="wrap-boder">
+            <div class="wrap-content">
+                <div class="content_table">
+                    <div class="header_content d-flex justify-content-between align-items-center">
+                        <h6>รายการ API Outbound </h6>
+                        <button type="button" class="btn btn-primary" onclick="GetCreate()">
+                            <i class="fa fa-plus"></i> สร้าง
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="table-responsive">
+                        <table class="table table-stand">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ลำดับ</th>
+                                    <th scope="col">ผู้ใช้บริการ</th>
+                                    <th scope="col">API Key</th>
+                                    <th scope="col">สถานะ</th>
+                                    <th scope="col">เริ่มให้บริการ</th>
+                                    <th scope="col">วันที่ลงทะเบียน</th>
+                                    <th scope="col">วันที่แก้ไขล่าสุด</th>
+                                    <th scope="col"> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.LRegis != null)
+                                {
+                                    var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
+                                    foreach (var w in Model.LRegis)
+                                    {
+                                        var json = System.Text.Json.JsonSerializer.Serialize(new
+                                        {
+                                            RegisterId = w.Id,
+                                            OrganizationName = w.OrganizationName,
+                                            OrganizationCode = w.OrganizationCode,
+                                            ApiKey = w.ApiKey,
+                                            FlagActive = w.FlagActive,
+                                            StartDate = w.StartDate?.ToString("yyyy-MM-dd"),
+                                            EndDate = w.EndDate?.ToString("yyyy-MM-dd"),
+                                            CreateBy = EmployeeId,
+                                            UpdateBy = EmployeeId
+                                        });
+                                        <tr>
+                                            <td>@index</td>
+                                            <td class="align_text" style="width:auto">
+                                                @Html.ActionLink(w.OrganizationName, "RegisterAPIDetail", "RegisterAPI", new { OrgCode = w.OrganizationCode }, null)
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @w.ApiKey
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @if (w.FlagActive ?? false)
+                                                {
+                                                    <span style="color: green;">ใช้งาน</span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color: red;">ปิดการใช้งาน</span>
+                                                }
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @(w.StartDate?.ToString("dd/MM/yyyy") ?? "-") - @(w.EndDate?.ToString("dd/MM/yyyy") ?? "-")
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                            </td>
+                                            <td class="align_text" style="width:auto">
+                                                @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <button type="button" class="action-btn editbtn" onclick='GetEdit(@Html.Raw(json))' title="Edit">
+                                                    <i class="fa fa-pen-to-square" style="color: #34A5EB; cursor: pointer;"></i>
+                                                </button>
+                                                @* <button type="button" class="action-btn delete btn-sm" onclick="OpenConfirmDeleteModal('@w.Id')" title="ลบ">
+                                                    <i class="fa fa-trash"></i>
+                                                </button> *@
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="trNodata" runat="server" visible="false">
+                                        <td colspan="12" valign="middle">
+                                            <b>No Data</b>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-footer">
+                        <div class="pagination-custom d-flex align-items-center gap-2">
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="first" value="first" title="หน้าแรก">
+                                <i class="fa fa-angle-double-left"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber <= 1 ? "disabled" : "")" name="previous" value="previous" title="ก่อนหน้า">
+                                <i class="fa fa-angle-left"></i>
+                            </button>
+                            <span class="mx-2">Page</span>
+                            <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
+                            <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly
+                                   style="width: 40px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; background: #fff;" />
+                            <span class="mx-2">of @Model.PageModel.TotalPage</span>
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="next" value="next" title="ถัดไป">
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn-light px-2 @(Model.PageModel.CurrentPageNumber >= Model.PageModel.TotalPage ? "disabled" : "")" name="last" id="btnLast" value="last" title="หน้าสุดท้าย">
+                                <i class="fa fa-angle-double-right"></i>
+                            </button>
+                        </div>
+                        <div class="text-end" style="min-width: 220px;">
+                            @{
+                                var start = (Model.LRegis?.Count() ?? 0) > 0 ? 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) : 0;
+                                var end = (Model.LRegis?.Count() ?? 0) > 0 ? ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LRegis.Count() : 0;
+                                var total = Model.TotalRowsList ?? 0;
+                            }
+                            แสดง @start - @end จาก @total รายการ
+                        </div>
+                    </div>
+             
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirm Delete -->
+    <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="min-width: 40%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ViewCancelModalLabel">ยืนยันการลบ</h5>
+                    <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                        <span class="x-sign" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>คุณต้องการลบข้อมูลนี้ใช่หรือไม่?</p>
+                    <input type="hidden" id="TArrivalDetaiModels_Id" />
+                </div>
+                <div class="modal-footer n-border" style="align-self: center;">
+                    <button class="btn btn_search text-color-botton m-r-10" id="DeleteEmp" name="DeleteEmp" value="DeleteEmp" onclick="submitDelete()">ลบ</button>
+                    <button class="btn btn_cancel" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal Create/Edit -->
+<div class="modal fade" id="CreateEditModal" tabindex="-1" role="dialog" aria-labelledby="CreateEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="min-width: 60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CreateEditModalLabel">สร้างข้อมูล API Outbound</h5>
+                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
+                    <span class="x-sign" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createEditRegisterForm" method="post" action="/RegisterAPI/Add">
+                <input type="hidden" name="RegisterId" id="RegisterId" />
+                <input type="hidden" name="CreateBy" id="CreateBy" value="@EmployeeId" />
+                <input type="hidden" name="UpdateBy" id="UpdateBy" value="@EmployeeId" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">หน่วยงานขอใช้บริการ API <span class="text-danger">*</span></label>
+                            <select asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="OrganizationCode" name="OrganizationCode" required>
+                                <option value="">--กรุณาเลือก--</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>สถานะ</label>
+                                <select class="form-control" name="FlagActive" id="FlagActive">
+                                    <option value="true">ใช้งาน</option>
+                                    <option value="false">ปิดการใช้งาน</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>วันที่เริ่มให้บริการ</label>
+                                <input class="form-control" type="date" name="StartDate" id="StartDate" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>วันที่สิ้นสุด</label>
+                                <input class="form-control" type="date" name="EndDate" id="EndDate" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer n-border" style="align-self: center;">
+                    <button type="submit" class="btn btn_search text-color-botton m-r-10" id="modalSubmitBtn">บันทึก</button>
+                    <button type="button" class="btn btn_cancel" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var btnLast = document.getElementById("btnLast");
+        if (btnLast) {
+            btnLast.addEventListener("click", function (e) {
+                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+            });
+        }
+    });
+
+    // ฟังก์ชัน submit ลบ
+    function submitDelete() {
+        var id = $('#TArrivalDetaiModels_Id').val();
+        if (!id) return;
+        $.ajax({
+            url: '/RegisterAPI/DeleteRegister',
+            type: 'POST',
+            data: { id: id },
+            success: function (res) {
+                if (res.success) {
+                    $('#ConfirmDeleteModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                }
+            },
+            error: function () {
+                alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+            }
+        });
+    }
+</script>

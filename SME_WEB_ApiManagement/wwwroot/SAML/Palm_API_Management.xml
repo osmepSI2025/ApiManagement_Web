@@ -1,0 +1,31 @@
+<md:EntityDescriptor entityID="https://idp.sme.go.th/1/92440f9b-44c6-48ff-a32c-fc8fc01471eb" ID="_58eb6efc-1f19-431b-8146-3fef71f908d0"
+                     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
+    <md:IDPSSODescriptor ID="_04494e78-cc4f-404b-9fa8-16373b073228"
+                         protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol"
+                         WantAuthnRequestsSigned="false">
+        <md:KeyDescriptor use="signing">
+            <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+                <X509Data>
+                    <X509Certificate>
+                        MIICqjCCAZKgAwIBAgIIT3XDWpKLIeMwDQYJKoZIhvcNAQELBQAwFTETMBEGA1UEAxMKbWluaU9yYW5nZTAeFw0yNTA2MTgwNDUyMDlaFw0zNTA2MTYwNDUyMDlaMBUxEzARBgNVBAMTCm1pbmlPcmFuZ2UwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDX09KniDlLp5nj2cDUZSY5iggVrl+ZxRWN2ZVU0KIGmJIzUo6WRD7U52kREA+7lvGgCu2sG8es5aOSqCWcHDyKKQxsN12sVoU3xOvCbRwCugFVkjRRFCkgozEThkS52ICdTeXLjTtYNnEyfU2/+Bc7Jpw7bxYVXKJqUuiG36qogpOBNJt+iHbOIcuWChzLPGxbihyUW/5sQnwvxha7xaynBuQoeOCiNS0js/fxXSULI7k54M0rYXxm+s1AVZUcSRgIfcZu0pB3CFt6MRJvcx5F9y87K97+GPB/7eVTxhVO/QmeHKwg1pYFYDI1NSkLgrUL+4DbOeKca618m654d/4BAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAIVjWFHtcfffJnn53T1/LvBYfWldoCjbutgApMO0kccWLUBpup+a6RUXaPBdXQc+0REGvZ4tgT1TKbGNwItOZVP/7RGBgiEq4yzmmj1UFuieMmBJ3QlSBOMnC9JVxEEctLa9pCcS+18Qrz04dzvqBslkZHPPLAG2HQ/rTHr+gERilIspZJR776QtU7mGeWIeSC9woVW1sYdXXHpFr3PMMiD9fHoHr83VFHp9UrHwqDEvx+AaGkRlHpfDubTZGQfQjfH16L7ivgcKlJxwJ6/3QM84owANvaEa6Y6U/8sgDFrqk7zltimNfE+/f/gBIzXmhAze/CCmHsQYiX7gfnkPI1g=
+                    </X509Certificate>
+                </X509Data>
+            </KeyInfo>
+        </md:KeyDescriptor>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp.sme.go.th/broker/login/saml_login/1/92440f9b-44c6-48ff-a32c-fc8fc01471eb"/>
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://idp.sme.go.th/broker/login/saml_login/1/92440f9b-44c6-48ff-a32c-fc8fc01471eb"/>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp.sme.go.th/broker/login/saml_logout/1/92440f9b-44c6-48ff-a32c-fc8fc01471eb"/>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://idp.sme.go.th/broker/login/saml_logout/1/92440f9b-44c6-48ff-a32c-fc8fc01471eb"/>
+    </md:IDPSSODescriptor>
+    <md:Organization>
+        <md:OrganizationName xml:lang="en">miniOrange</md:OrganizationName>
+        <md:OrganizationDisplayName xml:lang="en">miniOrange</md:OrganizationDisplayName>
+        <md:OrganizationURL xml:lang="en">www.miniorange.com</md:OrganizationURL>
+    </md:Organization>
+    <md:ContactPerson contactType="technical">
+        <md:GivenName>miniOrange</md:GivenName>
+        <md:SurName>Support</md:SurName>
+        <md:EmailAddress>info@xecurify.com</md:EmailAddress>
+    </md:ContactPerson>
+</md:EntityDescriptor>

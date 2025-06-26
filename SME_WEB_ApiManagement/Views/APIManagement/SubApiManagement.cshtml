@@ -1,0 +1,123 @@
+﻿@{
+    ViewData["Title"] = "API Management";
+
+}
+<div class="wrap-content">
+    <div class="header">
+        <div class="nav-navigation">
+            <p>HOME</p>
+            <p>></p>
+            <p>สำนักงานเศรษฐกิจอุตสาหกรรม</p>
+        </div>
+        <div class="header_content">
+            <h1>สำนักงานเศรษฐกิจอุตสาหกรรม</h1>
+            <div id="Batch">
+                <div class="content_body">
+                    <div class="row">
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>หน่วยงานที่ขอใช้ :</label></div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <input class="form-control xx" type="text" value="สำนักงานเศรษฐกิจอุตสาหกรรม" />
+
+                        </div>
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>วันเริ่มต้น :</label></div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <input class="form-control xx" type="text" value="01/11/2024" />
+
+                        </div>
+
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>วันสิ้นสุด : </label></div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control xx" type="text" value="31/12/2024" />
+
+                        </div>
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>ระบบที่ใช้ : </label></div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" checked="checked" /> ระบบัญชี/การเงิน
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" /> ระบบจัดทำงบประมาณ
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" checked="checked" /> ระบบติดตามและประเมินผลโครงการส่งเสริม SME
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" checked="checked" /> ระบบ KPI องค์กร
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" checked="checked" /> ระบบ สารสยเทศเพื่อการบริหารจัดการความเสี่ยง
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" /> ระบบสัญญาอิเล็กทรนิกส์
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" /> ระบบจัดการทำกระบวนการระบบ
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" /> ระบบบริหารทรัพยากรบุคคล
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" /> ระบบ SME Profile
+
+                            </label>
+                            </br>
+                            <label>
+                                <input type="checkbox" name="isAgree" value="true" /> ระบบจัดการนโยบายและแผนการส่งเสริม SME
+
+                            </label>
+                        </div>
+                        <div class="col-md-3 offset-md-3">
+                            <div><label>หมายเหตุ : </label></div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <textarea id="w3review" name="w3review" rows="8" cols="100">
+                           รายงานสถานการณ์ MSME รายปี (MSME White Paper)
+                            </textarea>
+
+                        </div>
+
+
+
+
+
+                    </div>
+
+                    <br />
+                    <div class="text-center m-t-10">
+
+                        <button class="btn btn_search text-color-botton m-r-10" id="submitSetupBatchTime" value="submitSetupBatchTime" runat="server" name="submitSetupBatchTime">Submit</button>
+                        <button class="btn btn_cancel ">Cancel</button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
