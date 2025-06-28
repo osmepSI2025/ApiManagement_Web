@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Login Successful";
+    var member = ViewBag.Member as SME_WEB_ApiManagement.Models.EmployeeLineOAModels; // Casting to your Member model
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Login สำเร็จ!</h1>
+    @if (member != null)
+    {
+        <p>ยินดีต้อนรับ, @member.LineOaDisplayName!</p>
+        <p>LINE User ID: @member.LineOaUserId</p>
+        @if (!string.IsNullOrEmpty(member.LineOaPictureUrl))
+        {
+            <img src="@member.LineOaPictureUrl" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;" />
+        }
+    }
+    else
+    {
+        <p>ไม่สามารถดึงข้อมูลสมาชิกได้</p>
+    }
+    <p>คุณสามารถกลับไปยัง <a asp-controller="Home" asp-action="Index">หน้าหลัก</a> ได้</p>
+</div>

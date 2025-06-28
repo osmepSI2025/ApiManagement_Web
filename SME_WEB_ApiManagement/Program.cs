@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
+using SME_WEB_ApiManagement.Models;
 using SME_WEB_ApiManagement.Services;
 using Sustainsys.Saml2;
 using Sustainsys.Saml2.Metadata;
@@ -8,16 +9,33 @@ using Sustainsys.Saml2.WebSso;
 using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
-// Update the Serilog configuration to use the correct method
+
+// --- Configure Serilog FIRST for early logging ---
 builder.Host.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
-    .ReadFrom.Configuration(context.Configuration) // Removed GetSection("Serilog")
+    .ReadFrom.Configuration(context.Configuration)
     .WriteTo.File(
         path: "Logs/app-log.txt",
         rollingInterval: RollingInterval.Day,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
     )
 );
-// อ่านค่า SAML2 จาก appsettings.json
+
+// --- Add all services to the container ONCE ---
+
+// Core MVC services
+builder.Services.AddControllersWithViews(); // Call this only once
+
+// Line OA Specific Services
+builder.Services.Configure<LineLoginSettings>(builder.Configuration.GetSection("LineLoginSettings"));
+// Session services (unified)
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// SAML2 Authentication Services
 var saml2Section = builder.Configuration.GetSection("Saml2:Saml2");
 var entityId = saml2Section["EntityId"];
 var idpEntityId = saml2Section["IdpEntityId"];
@@ -25,6 +43,7 @@ var ssoUrl = saml2Section["SingleSignOnServiceUrl"];
 var sloUrl = saml2Section["SingleLogoutServiceUrl"];
 var signingCertBase64 = saml2Section["SigningCertificate"];
 var AcsUrl = saml2Section["AcsUrl"];
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -47,54 +66,55 @@ builder.Services.AddAuthentication(options =>
         AllowUnsolicitedAuthnResponse = true
     };
 
-    // แปลง base64 string เป็น X509Certificate2 แล้วเพิ่มเข้า SigningKeys
     idp.SigningKeys.AddConfiguredKey(new X509Certificate2(Convert.FromBase64String(signingCertBase64)));
-
     options.IdentityProviders.Add(idp);
 });
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ICallAPIService, CallAPIService>(); // Register ICallAPIService with CallAPIService
+
+// Custom Services
+builder.Services.AddScoped<ICallAPIService, CallAPIService>();
 builder.Services.AddHttpClient<CallAPIService>();
 
-builder.Services.AddAuthorization();
-builder.Services.AddControllers();
-builder.Services.AddControllersWithViews();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
+// Authorization services
+builder.Services.AddAuthorization(); // Call this only once
+// builder.Services.AddControllers(); // This is typically included by AddControllersWithViews(), can be removed if not explicitly needed for API controllers only
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// --- Configure the HTTP request pipeline (Middleware Order is CRITICAL) ---
+
+// Development environment specific settings
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+// Order of middleware:
+// 1. Static Files (if any)
+app.UseStaticFiles();
+
+// 2. Routing (defines how requests are matched to endpoints)
 app.UseRouting();
-app.UseStaticFiles(); // Add this if you need to serve static files
-app.UseSession(); // <-- Add this line
+
+// 3. Session (must be before authentication/authorization if claims are stored in session)
+app.UseSession();
+
+// 4. Authentication (verifies who the user is)
 app.UseAuthentication();
+
+// 5. Authorization (verifies what the user can do)
 app.UseAuthorization();
 
-
+// 6. Endpoint mappings (MapGet, MapControllerRoute)
 app.MapGet("Account/Login", async context =>
 {
-    // Check if the user is already authenticated
     if (context.User.Identity?.IsAuthenticated == true)
     {
         try
         {
-            // Store claims in session as a dictionary
             var claimsDict = context.User.Claims.ToDictionary(c => c.Type, c => c.Value);
             context.Session.SetString("UserClaims", System.Text.Json.JsonSerializer.Serialize(claimsDict));
 
-            // Log all claims
             foreach (var claim in context.User.Claims)
             {
                 Log.Information("Claim: {Type} = {Value}", claim.Type, claim.Value);
@@ -104,7 +124,7 @@ app.MapGet("Account/Login", async context =>
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error in SAMLLogin");
+            Log.Error(ex, "Error in SAMLLogin during claim processing.");
             context.Response.Redirect("/account/login?error=" + Uri.EscapeDataString("SAML login failed: " + ex.Message));
             return;
         }
@@ -117,15 +137,11 @@ app.MapGet("account/logout", async context =>
     await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 });
 
-// Remove or comment out this line if present:
-//app.MapGet("/", () => "SAML2 Integration Ready. Go to /account/login to initiate SSO.");
-
-// Add this before app.Run();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=home}/{action=index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
+// --- Application Run ---
 try
 {
     app.Run();
@@ -138,3 +154,5 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+// --- Class definition (if not in a separate file) ---
