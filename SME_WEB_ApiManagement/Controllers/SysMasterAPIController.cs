@@ -188,8 +188,11 @@ namespace SME_WEB_ApiManagement.Controllers
                 }
                 else
                 {
+
                     MSystemModels model = new MSystemModels();
                     model.FlagDelete = "N";
+                    model.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+                    model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
 
                     result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
                     totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();

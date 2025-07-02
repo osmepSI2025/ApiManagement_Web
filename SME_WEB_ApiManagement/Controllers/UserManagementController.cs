@@ -5,6 +5,7 @@ using SME_WEB_ApiManagement.Models;
 using SME_WEB_ApiManagement.Services;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 
 namespace SME_WEB_ApiManagement.Controllers
@@ -79,13 +80,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     model.AdminUsers = EmpRolelist.Where(u => u.EmployeeRole == "ADMIN").ToList();
                     model.SuperAdminUsers = EmpRolelist.Where(u => u.EmployeeRole == "SUPERADMIN").ToList();
                 }
-                //searchEmployeeRoleModels modelSearch = new searchEmployeeRoleModels
-                //{
-                //    rowOFFSet = 0,
-                //    rowFetch = PageSize
-                //};
-                //var EmpRolelistPopup = await EmployeeDAO.GetEmpByBu(modelSearch, API_Path_Main + API_Path_Sub, null);
-                //model.listEmployeeRoleModels = EmpRolelistPopup;
+
                 return View(model);
             }
             catch (Exception ex)
@@ -94,29 +89,6 @@ namespace SME_WEB_ApiManagement.Controllers
                 return View("Error", new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
             }
         }
-
-        //[HttpPost]
-        //public JsonResult AddOrEdit(UserManagementModels user)
-        //{
-        //    if (user.Id == 0)
-        //    {
-        //        user.Id = _users.Any() ? _users.Max(u => u.Id) + 1 : 1;
-        //        _users.Add(user);
-        //    }
-        //    else
-        //    {
-        //        var existing = _users.FirstOrDefault(u => u.Id == user.Id);
-        //        if (existing != null)
-        //        {
-        //            existing.FullName = user.FullName;
-        //            existing.Position = user.Position;
-        //            existing.Section = user.Section;
-        //            existing.Department = user.Department;
-        //            existing.Role = user.Role;
-        //        }
-        //    }
-        //    return Json(new { success = true });
-        //}
 
         [HttpPost]
         public async Task<JsonResult> DeleteUser(int id)
@@ -175,6 +147,89 @@ namespace SME_WEB_ApiManagement.Controllers
                 return Json(new { success = false, message = "An error occurred while inserting users." });
             }
         }
+        // GET: UserManagement/Setting/{employeeId}
+        public async Task<ActionResult> Setting(string employeeId)
+        {
+            //decode base64
 
+            string DecodeEmpId = Service_CenterDAO.Decoderbase64(employeeId);
+            EmployeeModels empid = new EmployeeModels
+            {
+                EmployeeId = DecodeEmpId
+            };
+         var empdetail=   EmployeeDAO.GetDetaiEmp(empid, API_Path_Main + API_Path_Sub);
+            var allSystems = SystemDAO.GetSystem(API_Path_Main + API_Path_Sub, null)
+                .Select(system => new TEmployeeMapSystemModels
+                {
+                    SystemApiId = system.Id,
+                    EmployeeId = DecodeEmpId,
+                    FlagActive = system.FlagActive,
+                    CreateBy = HttpContext.Session.GetString("EmployeeId"),
+                    CreateDate = system.CreateDate,
+                    UpdateBy =  HttpContext.Session.GetString("EmployeeId"),
+                    UpdateDate = system.UpdateDate
+                    ,SystemApiName = system.SystemName
+                }).ToList(); var mappedSystems =  SystemDAO.GetTEmpSystemByempId(DecodeEmpId, API_Path_Main + API_Path_Sub); // List<TEmployeeMapSystemModels>
+
+            var model = new UserSystemSettingViewModel
+            {
+                EmployeeId = DecodeEmpId,
+                FirstNameTh = empdetail.Result.FirstNameTh,
+                LastNameTh = empdetail.Result.LastNameTh,
+              
+                AllSystems = allSystems,
+                SelectedSystemIds = mappedSystems.Where(m => m.SystemApiId.HasValue).Select(m => m.SystemApiId.Value).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> Setting(UserSystemSettingViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Remove old mappings
+                //await _employeeService.RemoveAllEmployeeMapSystemsAsync(model.EmployeeId);
+
+                // Add new mappings
+                List<TEmployeeMapSystemModels> Mdata = new List<TEmployeeMapSystemModels>();
+                if (model.SelectedSystemIds != null)
+                {
+                    foreach (var systemId in model.SelectedSystemIds)
+                    {
+                        var map = new TEmployeeMapSystemModels
+                        {
+                            EmployeeId = model.EmployeeId,
+                            SystemApiId = systemId,
+                            FlagActive = true,
+                            CreateBy = User.Identity?.Name,
+                            CreateDate = DateTime.Now
+                        };
+                        Mdata.Add(map);
+                       
+                    }
+                }
+                var result = SystemDAO.AddEmployeeMapSystemAsync(Mdata, API_Path_Main + API_Path_Sub, null);
+                if (result.HasValue && result.Value > 0)
+                {
+                    TempData["Message"] = "บันทึกสำเร็จ";
+                    // Reload the page by redirecting to the same Setting action
+                    return RedirectToAction("Setting", new { employeeId = model.EmployeeId });
+                }
+                else
+                {
+                    _logger.LogError("Failed to add employee map system.");
+                    ModelState.AddModelError("", "An error occurred while saving the data.");
+                }
+            }
+
+            // Reload systems if model state is invalid
+         //   model.AllSystems = await _systemApiService.GetAllSystemsAsync();
+
+
+            return View(model);
+        }
     }
 }

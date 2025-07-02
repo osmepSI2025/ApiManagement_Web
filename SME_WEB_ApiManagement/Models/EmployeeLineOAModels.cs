@@ -17,6 +17,8 @@
         public string? LineOaPictureUrl { get; set; }
 
         public DateTime? LineOaDateJoined { get; set; }
+
+        public string? LineOaChannelId { get; set; }
     }
 
    

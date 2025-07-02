@@ -59,6 +59,7 @@ namespace SME_WEB_ApiManagement.Controllers
                         var empDetailJson = JsonSerializer.Serialize(EmpDetail);
                         HttpContext.Session.SetString("EmpDetail", empDetailJson);
                         HttpContext.Session.SetString("EmployeeId", EmpDetail.EmployeeId);
+                        HttpContext.Session.SetString("EmployeeRole", EmpDetail.RoleCode);
 
                         ViewBag.EmpDetail = EmpDetail;
                         ViewBag.claimsDict = claimsJson;

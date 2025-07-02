@@ -119,10 +119,11 @@ namespace SME_WEB_ApiManagement.Controllers
                 LineOaAccessToken = lineToken.Access_token,
                 LineOaRefreshToken = lineToken.Refresh_token, // ถ้ามี refresh token
                 LineOaDateJoined = DateTime.Now,
+                LineOaChannelId = _lineSettings.ChannelId,
                 EmployeeId = HttpContext.Session.GetString("EmployeeId"), // สมมติว่าเก็บ EmployeeId ไว้ใน Session ก่อนหน้านี้
             };
 
-            await LineOaDAO.InsrtLineOaEmp(member, API_Path_Main + API_Path_Sub,null);
+            await LineOaDAO.InsrtLineOaEmp(member, _lineSettings.DBEmployeeLineOa, null);
             // ตัวอย่าง: เก็บข้อมูลสมาชิกใน Session (ไม่แนะนำสำหรับ Production จริง)
             HttpContext.Session.SetString("LineUserId", member.LineOaUserId);
             HttpContext.Session.SetString("DisplayName", member.LineOaDisplayName);

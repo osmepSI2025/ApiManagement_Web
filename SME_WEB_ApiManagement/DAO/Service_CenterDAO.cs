@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 
 namespace SME_WEB_ApiManagement.DAO
 {
@@ -334,119 +335,6 @@ namespace SME_WEB_ApiManagement.DAO
         }
 
 
-        //public static int InsertImportFile(string apipath, string tokenStr, TFileUploadModels models)
-        //{
-        //    int ret = 0;
-        //    APIpath = apipath + "ImportFile/CreateImportFile";
-
-        //    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
-        //    ////var refreshtoken = refreshToken();
-        //    httpWebRequest.Headers.Add("Authorization", "Bearer " + tokenStr);
-
-        //    httpWebRequest.ContentType = "application/json";
-
-        //    httpWebRequest.Method = "POST";
-
-        //    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-        //    {
-        //        var json = JsonConvert.SerializeObject(models, Formatting.Indented);
-
-        //        streamWriter.Write(json);
-        //        streamWriter.Flush();
-        //        streamWriter.Close();
-        //    }
-
-        //    var response = (HttpWebResponse)httpWebRequest.GetResponse();
-
-        //    using (var streamReader = new StreamReader(response.GetResponseStream()))
-        //    {
-        //        var result = streamReader.ReadToEnd();
-        //        ret = JsonConvert.DeserializeObject<int>(result);
-
-
-        //    }
-        //    return ret;
-        //}
-        //public static List<TFileUploadModels> CheckImportFile(TFileUploadModels models, string apipath = null, string TokenStr = null)
-        //{
-        //    List<TFileUploadModels> ret = new List<TFileUploadModels>();
-
-        //    APIpath = apipath + "ImportFile/GetChexkFileImport";
-
-        //    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
-        //    ////var refreshtoken = refreshToken();
-        //    httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
-
-        //    httpWebRequest.ContentType = "application/json";
-
-        //    httpWebRequest.Method = "POST";
-
-        //    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-        //    {
-        //        var json = JsonConvert.SerializeObject(models, Formatting.Indented);
-
-        //        streamWriter.Write(json);
-        //        streamWriter.Flush();
-        //        streamWriter.Close();
-        //    }
-
-        //    var response = (HttpWebResponse)httpWebRequest.GetResponse();
-
-        //    using (var streamReader = new StreamReader(response.GetResponseStream()))
-        //    {
-        //        var result = streamReader.ReadToEnd();
-        //        ret = JsonConvert.DeserializeObject<List<TFileUploadModels>>(result);
-
-
-        //    }
-        //    return ret;
-        //}
-
-
-        //public static List<TFileUploadModels> GetFileImportAll(string apipath, string tokenStr, TFileUploadModels models)
-        //{
-
-        //    List<TFileUploadModels> Llist = new List<TFileUploadModels>();
-
-        //    APIpath = apipath + "ImportFile/GetFileImportAll";
-        //    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
-        //    httpWebRequest.Headers.Add("Authorization", "Bearer " + tokenStr);
-
-        //    httpWebRequest.ContentType = "application/json";
-
-        //    httpWebRequest.Method = "POST";
-
-
-        //    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-        //    {
-        //        var Req = new TFileUploadModels();
-
-        //        if (models != null)
-        //        {
-        //            Req = models;
-        //        }
-
-
-        //        var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
-
-        //        streamWriter.Write(json);
-        //        streamWriter.Flush();
-        //        streamWriter.Close();
-
-
-        //    }
-        //    var response = (HttpWebResponse)httpWebRequest.GetResponse();
-
-        //    using (var streamReader = new StreamReader(response.GetResponseStream()))
-        //    {
-        //        var result = streamReader.ReadToEnd();
-
-        //        Llist = JsonConvert.DeserializeObject<List<TFileUploadModels>>(result);
-
-        //    }
-        //    return Llist;
-
-        //}
 
         public static string GetGenerateCode(string apipath = null, string TokenStr = null)
         {
@@ -586,6 +474,12 @@ namespace SME_WEB_ApiManagement.DAO
             // แปลงวันที่เป็นรูปแบบที่ต้องการ
             formattedDate = dateTimeOffset.ToString("yyyy-MM-ddTHH:mm:ss.fffK", englishCulture);
             return formattedDate;
+        }
+
+        public static string Decoderbase64(string base64EncodedData)
+        {
+            var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }
 }

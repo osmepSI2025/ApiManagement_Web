@@ -1,0 +1,66 @@
+﻿@model SME_WEB_ApiManagement.Models.UserSystemSettingViewModel
+
+@{
+    ViewBag.Title = "ตั้งค่าระบบที่ดูแลได้";
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="main-content">
+    <div class="wrap-boder">
+        <div class="card-title">User Setting</div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5>ชื่อผู้ใช้: @Model.FirstNameTh @Model.LastNameTh</h5>
+                <h6>ตำแหน่ง: @Model.PositionName</h6>
+                <h6>ส่วน: @Model.BusinessUnitName</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.EmployeeId)
+                <div class="mb-3">
+                    <label class="form-label">เลือกระบบที่ดูแลได้</label>
+                    <div>
+                        @foreach (var system in Model.AllSystems)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       name="SelectedSystemIds"
+                                       value="@system.SystemApiId"
+                                       @(Model.SelectedSystemIds.Contains(system.SystemApiId ?? 0) ? "checked" : "") />
+                                <label class="form-check-label">
+                                    @system.SystemApiName <!-- Display system name instead of ID -->
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">บันทึก</button>
+                <a href="@Url.Action("Index", "UserManagement")" class="btn btn-secondary">กลับ</a>
+            }
+        </div>
+        
+    </div>
+</div>
+
+<h2>ตั้งค่าระบบที่ดูแลได้</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5>ชื่อผู้ใช้: @Model.FirstNameTh @Model.LastNameTh</h5>
+        <h6>ตำแหน่ง: @Model.PositionName</h6>
+        <h6>ส่วน: @Model.BusinessUnitName</h6>
+    </div>
+</div>
+

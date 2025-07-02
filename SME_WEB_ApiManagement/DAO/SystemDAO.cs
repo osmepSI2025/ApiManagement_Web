@@ -640,5 +640,75 @@ namespace SME_WEB_ApiManagement.DAO
             }
         }
 
+
+        public static List<TEmployeeMapSystemModels> GetTEmpSystemByempId(string EmpId,string apipath = null, string TokenStr = null)
+        {
+
+
+            APIpath = apipath + "TEmployeeMapSystem/EmaployeeId="+ EmpId;
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+            httpWebRequest.ContentType = "application/json";
+            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+            httpWebRequest.Method = "GET";
+            List<TEmployeeMapSystemModels> Llist = new List<TEmployeeMapSystemModels>();
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+
+                    var result = streamReader.ReadToEnd();
+                    Llist = JsonConvert.DeserializeObject<List<TEmployeeMapSystemModels>>(result);
+                    return Llist;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static int? AddEmployeeMapSystemAsync(List<TEmployeeMapSystemModels> vm = null, string apipath = null, string TokenStr = null)
+        {
+
+
+            APIpath = apipath + "TEmployeeMapSystem/CreateEmpSystemList";
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+            httpWebRequest.ContentType = "application/json";
+            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+            httpWebRequest.Method = "POST";
+            int? Llist = 0;
+            try
+            {
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    var Req = vm;
+
+
+                    var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
+
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+
+                    var result = streamReader.ReadToEnd();
+                    Llist = JsonConvert.DeserializeObject<int?>(result);
+                    return Llist;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

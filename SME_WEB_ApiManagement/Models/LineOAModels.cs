@@ -5,6 +5,7 @@
         public string ChannelId { get; set; }
         public string ChannelSecret { get; set; }
         public string CallbackUrl { get; set; }
+        public string DBEmployeeLineOa { get; set; }
     }
     public class Member
     {

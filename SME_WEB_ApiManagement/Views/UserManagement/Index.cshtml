@@ -1,4 +1,5 @@
-﻿@model SME_WEB_ApiManagement.Models.ViewEmployeeRoleModels
+﻿@using System.Text
+@model SME_WEB_ApiManagement.Models.ViewEmployeeRoleModels
 @{
     ViewData["Title"] = "User Management";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -52,7 +53,11 @@
                             {
                                 <tr>
                                     <td>@i</td>
-                                    <td>@user.FirstNameTh @user.LastNameTh</td>
+                                            <td>
+                                                <a href="@Url.Action("Setting", "UserManagement", new { employeeId = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.EmployeeId ?? "")) })" class="text-primary">
+                                                    @user.FirstNameTh @user.LastNameTh
+                                                </a>
+                                            </td>
                                     <td>@user.PositionName</td>
                                     <td>@user.BusinessUnitName</td>
                                   
