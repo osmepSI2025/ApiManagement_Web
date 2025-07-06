@@ -30,14 +30,18 @@
         $("#CreateModal").modal("show");
     }
 
-    $(document).on('click', '.editbtn', function () {
-        $("#InsMOrg_OrganizationId").val($(this).data("organizationid"));
-        // $("#InsMOrg_OrganizationCode").val($(this).data("organizationcode")).trigger('change');
-        $("#InsMOrg_OrganizationName").val($(this).data("organizationname"));
-        $("#InsMOrg_Description").val($(this).data("description"));
-        $("#InsMOrg_FlagActive").val($(this).data("flagactive"));
-        $("#CreateModal").modal("show");
-    });
+$(document).on('click', '.editbtn', function () {
+    $("#InsMOrg_OrganizationId").val($(this).data("organizationid"));
+    // If you want to set OrganizationCode, uncomment the next line
+    // $("#InsMOrg_OrganizationCode").val($(this).data("organizationcode")).trigger('change');
+    $("#InsMOrg_OrganizationName").val($(this).data("organizationname"));
+    $("#InsMOrg_Description").val($(this).data("description"));
+    // For checkbox, use .prop('checked', ...) for boolean values
+    $("#InsMOrg_FlagActive").prop('checked', $(this).data("flagactive") === true || $(this).data("flagactive") === "True");
+          $("#InsMOrg_CreateBy").val($(this).data("createby"));
+        $("#InsMOrg_UpdateBy").val($(this).data("updateby"));
+    $("#CreateModal").modal("show");
+});
 
     $(document).on('click', '.btn_Delete', function () {
         var orgId = $(this).data('organizationid');
@@ -239,7 +243,9 @@
                                                    data-organizationcode="@w.OrganizationCode"
                                                    data-organizationname="@w.OrganizationName"
                                                    data-description="@w.Description"
-                                                   data-flagactive="@w.FlagActive">
+                                                   data-flagactive="@w.FlagActive"
+                                                   data-createby="@w.CreateBy"
+                                                   data-updateby="@w.UpdateBy">
                                                     <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" class="btn_Delete"
@@ -298,8 +304,8 @@
                     <h4 class="modal-title font-weight-bold" id="CreateModalLabel">หน่วยงานหรือบริษัท(ภายนอก)</h4>
                 </div>
                 <div class="modal-body px-5 py-4">
-               @*      <input type="hidden" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
-                    <div class="form-group mb-4">
+                    <input type="hidden" asp-for="InsMOrg.OrganizationId" id="InsMOrg_OrganizationId" />
+                    @* <div class="form-group mb-4">
                         <label for="InsMOrg_OrganizationCode" class="font-weight-bold" style="font-size:1.3rem;">
                             หน่วยงานเจ้าของ API <span class="text-danger">*</span>
                         </label>

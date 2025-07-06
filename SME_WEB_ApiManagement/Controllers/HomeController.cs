@@ -60,7 +60,7 @@ namespace SME_WEB_ApiManagement.Controllers
                         HttpContext.Session.SetString("EmpDetail", empDetailJson);
                         HttpContext.Session.SetString("EmployeeId", EmpDetail.EmployeeId);
                         HttpContext.Session.SetString("EmployeeRole", EmpDetail.RoleCode);
-
+                        HttpContext.Session.SetString("BusinessUnitId", EmpDetail.BusinessUnitId);
                         ViewBag.EmpDetail = EmpDetail;
                         ViewBag.claimsDict = claimsJson;
                     }

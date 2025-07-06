@@ -339,6 +339,66 @@ namespace SME_WEB_ApiManagement.DAO
                 return null;
             }
         }
+        public static List<MSystemModels> GetSystemBySearchMaster(MSystemModels vm, string apipath = null, string flagCount = null, int currentpage = 0, int PageSize = 0, string TokenStr = null)
+        {
+
+
+            APIpath = apipath + "MSystem/GetSystemBySearchMaster";
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+            httpWebRequest.ContentType = "application/json";
+            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+            httpWebRequest.Method = "POST";
+            List<MSystemModels> Llist = new List<MSystemModels>();
+            try
+            {
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    MSystemModels Req; // กำหนด Type ชัดเจน
+
+                    if (vm != null)
+                    {
+                        Req = vm;
+                    }
+                    else
+                    {
+                        Req = new MSystemModels();
+                    }
+
+                    if (flagCount != "Y")
+                    {
+                        Req.rowOFFSet = (currentpage - 1) * PageSize;
+                        Req.rowFetch = PageSize;
+                    }
+                    else
+                    {
+                        Req.rowOFFSet = 0;
+                        Req.rowFetch = 0;
+
+                    }
+                    var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
+
+
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+
+                    var result = streamReader.ReadToEnd();
+                    Llist = JsonConvert.DeserializeObject<List<MSystemModels>>(result);
+                    return Llist;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public static int? UpsertSystem(MSystemModels vm = null, string apipath = null, string TokenStr = null)
         {
 

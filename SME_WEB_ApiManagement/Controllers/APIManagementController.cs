@@ -84,12 +84,26 @@ namespace SME_WEB_ApiManagement.Controllers
                 }
                 else if (!string.IsNullOrEmpty(saveData))
                 {
-                    var createOrg = SystemDAO.UpsertOrg(vm.InsMOrg, API_Path_Main + API_Path_Sub, null);
+                    var data = new MOrganizationModels();
+                    data.OrganizationId = vm.InsMOrg.OrganizationId;
+                    data.OrganizationName = vm.InsMOrg.OrganizationName;
+                    data.FlagActive = vm.InsMOrg.FlagActive;
+                    data.FlagDelete = "N";
+                    data.UpdateBy = HttpContext.Session.GetString("EmployeeId");
+                    data.CreateBy = HttpContext.Session.GetString("EmployeeId");
+                    var createOrg = SystemDAO.UpsertOrg(data, API_Path_Main + API_Path_Sub, null);
                     return Redirect("AgencyCompany");
                 }
                 else if (!string.IsNullOrEmpty(editData))
                 {
-                    var createOrg = SystemDAO.UpsertOrg(vm.InsMOrg, API_Path_Main + API_Path_Sub, null);
+                    var data = new MOrganizationModels();
+                    data.OrganizationId = vm.InsMOrg.OrganizationId;
+                    data.OrganizationName = vm.InsMOrg.OrganizationName;
+                    data.FlagActive = vm.InsMOrg.FlagActive;
+                    data.FlagDelete = "N";
+                    data.UpdateBy = HttpContext.Session.GetString("EmployeeId");
+                    data.CreateBy = HttpContext.Session.GetString("EmployeeId");
+                    var createOrg = SystemDAO.UpsertOrg(data, API_Path_Main + API_Path_Sub, null);
                     return Redirect("AgencyCompany");
                 }
                 else if (!string.IsNullOrEmpty(DeleteData)) 

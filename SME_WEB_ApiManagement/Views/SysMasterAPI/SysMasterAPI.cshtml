@@ -15,13 +15,14 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     function GetCreate() {
+        $("#CreateModalLabel").text("สร้างระบบ API");
         $("#CreateModal").modal("show");
     }
 
     $(document).ready(function () {
         $(".editbtn").click(function () {
             var id = $(this).data("id");
-            var systemName = $("#InsMSystem_SystemName").val();
+            var systemName = $(this).data("systemname");
             var flagActive = $(this).data("flagactive");
             var ownerSystemCode = $(this).data("ownersystemcode");
             $("#InsMSystem_Id").val(id);
@@ -33,6 +34,7 @@
             } else {
                 $("#InsMSystem_FlagActive").prop("checked", false);
             }
+            $("#CreateModalLabel").text("แก้ไขข้อมูล");
             $("#CreateModal").modal("show");
         });
 
@@ -109,8 +111,8 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label">สถานะ</label>
                     <div class="input-group">
-                        <select asp-for="MSystem.FlagActive" asp-items="vDdlStatus" class="form-select">
-                            <option value="">กรุณาระบุ</option>
+                        <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
+                            <option value="">--กรุณาเลือก--</option>
                         </select>
                         <span class="input-group-text bg-white border-0">
                             <i class="fa fa-chevron-down"></i>
@@ -120,14 +122,14 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label">วันที่สร้าง</label>
                     <div class="input-group">
-                        <input class="form-control" type="date" asp-for="MSystem.CreateDate" placeholder="กรุณาระบุ" />
+                        <input class="form-control" type="date" asp-for="MSystem.StartDate" placeholder="กรุณาระบุ" />
                       
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">วันที่สิ้นสุด</label>
                     <div class="input-group">
-                        <input class="form-control" type="date" asp-for="MSystem.UpdateDate" placeholder="กรุณาระบุ" />
+                        <input class="form-control" type="date" asp-for="MSystem.EndDate" placeholder="กรุณาระบุ" />
                        
                     </div>
                 </div>
@@ -153,6 +155,7 @@
                             <th  >ลำดับ</th>
                             <th style="width:55%;">ชื่อระบบ</th>
                             <th  >สถานะ API</th>
+                            <th>วันที่เริ่มต้น-สิ้นสุด</th>
                             <th  >วันที่สร้าง</th>
                             <th >วันที่แก้ไขล่าสุด</th>
                             <th ></th>
@@ -172,6 +175,7 @@
                                             @w.SystemName
                                         </a>
                                     </td>
+                                    <td>@(w.CreateDate.HasValue? w.StartDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")- @(w.CreateDate.HasValue? w.EndDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
                                     <td>
                                         <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
                                             @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")
@@ -255,6 +259,16 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">ชื่อระบบ<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" asp-for="InsMSystem.SystemName" placeholder="กรุณาระบุ" id="InsMSystem_SystemName" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">วันที่เริ่มต้น</label>
+                                <input class="form-control" type="date" asp-for="InsMSystem.StartDate" id="InsMSystem_StartDate" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">วันที่สิ้นสุด</label>
+                                <input class="form-control" type="date" asp-for="InsMSystem.EndDate" id="InsMSystem_EndDate" />
                             </div>
                         </div>
                         <div class="row mb-4">

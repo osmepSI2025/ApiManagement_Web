@@ -169,8 +169,9 @@ namespace SME_WEB_ApiManagement.Controllers
 
      string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string OrgCode = null)
         {
+         
             #region panging
-            int curpage = 0;
+         int curpage = 0;
             int totalpage = 0;
             ViewRegisterApiModels result = new ViewRegisterApiModels();
 
@@ -186,6 +187,7 @@ namespace SME_WEB_ApiManagement.Controllers
             PageSize = PageSizeDummy;
             #endregion
             // 
+            ViewBag.UserRole= HttpContext.Session.GetString("EmployeeRole");
             try
             {
                 if (!string.IsNullOrEmpty(saveData))

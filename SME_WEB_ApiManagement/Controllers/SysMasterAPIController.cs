@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SME_WEB_ApiManagement.DAO;
 using SME_WEB_ApiManagement.Models;
@@ -62,10 +63,10 @@ namespace SME_WEB_ApiManagement.Controllers
             {
                 if (!string.IsNullOrEmpty(searchData))
                 {
-                    result.LSystem = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, null);
+                    result.LSystem = SystemDAO.GetSystemBySearchMaster(vm.MSystem, API_Path_Main + API_Path_Sub, null);
                     if (result.LSystem != null)
                     {
-                        totalCount = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
+                        totalCount = SystemDAO.GetSystemBySearchMaster(vm.MSystem, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
                     }
                     else
                     {
@@ -80,7 +81,16 @@ namespace SME_WEB_ApiManagement.Controllers
                 }
                 else if (!string.IsNullOrEmpty(saveData))
                 {
-                    int? save = SystemDAO.UpsertSystem(vm.InsMSystem, API_Path_Main + API_Path_Sub, null);
+                    var data_ins = new MSystemModels();
+                    data_ins.OwnerSystemCode = vm.InsMSystem.OwnerSystemCode;
+                    data_ins.SystemName = vm.InsMSystem.SystemName;
+                    data_ins.CreateBy = HttpContext.Session.GetString("EmployeeId");
+                    data_ins.UpdateBy = HttpContext.Session.GetString("EmployeeId");
+                    data_ins.FlagActive = vm.InsMSystem.FlagActive;
+                    data_ins.StartDate = vm.InsMSystem.StartDate;
+                    data_ins.EndDate = vm.InsMSystem.EndDate;
+                    data_ins.Id = vm.InsMSystem.Id != 0 ? vm.InsMSystem.Id : 0;
+                    int? save = SystemDAO.UpsertSystem(data_ins, API_Path_Main + API_Path_Sub, null);
                     return Redirect("SysMasterAPI");
                 }
                 else if (!string.IsNullOrEmpty(DeleteData))
@@ -91,10 +101,13 @@ namespace SME_WEB_ApiManagement.Controllers
                 else
                 {
                     MSystemModels model = new MSystemModels();
-                    model.FlagDelete = "N";
 
-                    result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
-                    totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
+                    model.FlagDelete = "N";
+                    model.CreateBy = HttpContext.Session.GetString("EmployeeId");
+                    model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+
+                    result.LSystem = SystemDAO.GetSystemBySearchMaster(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+                    totalCount = SystemDAO.GetSystemBySearchMaster(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
                     result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
                 }
 
@@ -160,10 +173,18 @@ namespace SME_WEB_ApiManagement.Controllers
             {
                 if (!string.IsNullOrEmpty(searchData))
                 {
-                    result.LSystem = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, null);
+                    MSystemModels model = new MSystemModels();
+                    model.FlagDelete = "N";
+                    model.StartDate = vm.MSystem.StartDate;
+                    model.EndDate = vm.MSystem.EndDate;
+                    model.FlagActive = vm.MSystem.FlagActive;
+                    model.SystemName = vm.MSystem.SystemName;
+                    model.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+                    model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+                    result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, null);
                     if (result.LSystem != null)
                     {
-                        totalCount = SystemDAO.GetSystemBySearch(vm.MSystem, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
+                        totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
                     }
                     else
                     {
@@ -190,6 +211,7 @@ namespace SME_WEB_ApiManagement.Controllers
                 {
 
                     MSystemModels model = new MSystemModels();
+                    model.FlagActive = true;
                     model.FlagDelete = "N";
                     model.EmployeeId = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");

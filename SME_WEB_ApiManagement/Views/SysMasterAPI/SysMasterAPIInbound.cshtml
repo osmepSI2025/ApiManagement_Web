@@ -1,7 +1,17 @@
 ﻿@model SME_WEB_ApiManagement.Models.ViewSystemApiModels
 @{
     ViewData["Title"] = "API Inbound";
-    var vDdlStatus = ViewBag.vDdlStatus;
+    ViewBag.vDdlStatus = new SelectList(
+     new[]
+     {
+        new { Value = "Null", Text = "กรุณาระบุ" },
+        new { Value = "true", Text = "ใช้งาน" },
+        new { Value = "false", Text = "ปิดใช้งาน" }
+     },
+     "Value",
+     "Text",
+     Model?.MSystem?.FlagActive != null ? Model.MSystem.FlagActive.ToString().ToLower() : ""
+ );
     var vDdlOrg = ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     var EmployeeId = ViewBag.EmployeeId;
@@ -111,8 +121,8 @@
                 <div class="col-md-6  ">
                     <label class="form-label">สถานะ</label>
                     <div class="input-group">
-                        <select asp-for="MSystem.FlagActive" asp-items="vDdlStatus" class="form-select">
-                            <option value="">กรุณาระบุ</option>
+                        <select asp-for="MSystem.FlagActive" asp-items="ViewBag.vDdlStatus" class="form-select">
+                          
                         </select>
                        
                     </div>
@@ -120,13 +130,13 @@
                 <div class="col-md-6  ">
                     <label class="form-label">วันที่สร้าง</label>
                     <div class="input-group">
-                        <input class="form-control" type="date" asp-for="MSystem.CreateDate" placeholder="กรุณาระบุ" />
+                        <input class="form-control" type="date" asp-for="MSystem.StartDate" placeholder="กรุณาระบุ" />
                     </div>
                 </div>
                 <div class="col-md-6  ">
                     <label class="form-label">วันที่สิ้นสุด</label>
                     <div class="input-group">
-                        <input class="form-control" type="date" asp-for="MSystem.UpdateDate" placeholder="กรุณาระบุ" />
+                        <input class="form-control" type="date" asp-for="MSystem.EndDate" placeholder="กรุณาระบุ" />
                     </div>
                 </div>
             </div>
@@ -148,8 +158,10 @@
                     <thead>
                         <tr>
                             <th>ลำดับ</th>
-                            <th style="width:65%">ชื่อระบบ</th>
+                            <th style="width:30%">ชื่อระบบ</th>
+                            <th>เจ้าของ</th>
                             <th >สถานะ API</th>
+                            <th>วันที่เริ่มต้น-สิ้นสุด</th>
                             <th >วันที่สร้าง</th>
                             <th >วันที่แก้ไขล่าสุด</th>
                         </tr>
@@ -167,6 +179,9 @@
                                             @w.SystemName
                                         </a>
                                     </td>
+                                    <td>@w.OwnerSystemName</td>
+                                    <td>@(w.CreateDate.HasValue? w.StartDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")- @(w.CreateDate.HasValue? w.EndDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
+
                                     <td>
                                         <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
                                             @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")
