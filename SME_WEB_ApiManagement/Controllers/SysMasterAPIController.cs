@@ -114,7 +114,8 @@ namespace SME_WEB_ApiManagement.Controllers
                 result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
 
                 var serviceCenter = new ServiceCenter(_configuration, _callAPIService);
-                result.vDdlOrg = serviceCenter.GetDdlDepartment(API_Path_Main + API_Path_Sub, "business-units").Result;
+                result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
+               // result.vDdlOrg = serviceCenter.GetDdlDepartment(API_Path_Main + API_Path_Sub, "business-units").Result;
                 ViewBag.DDLDepartment = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
                 ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
