@@ -101,7 +101,7 @@ namespace SME_WEB_ApiManagement.Controllers
                 else
                 {
                     MSystemModels model = new MSystemModels();
-
+                    model.FlagActive = true;
                     model.FlagDelete = "N";
                     model.CreateBy = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
@@ -171,7 +171,7 @@ namespace SME_WEB_ApiManagement.Controllers
             ViewSystemApiModels result = new ViewSystemApiModels();
             try
             {
-                if (!string.IsNullOrEmpty(searchData))
+                if (!string.IsNullOrEmpty(searchData) || !string.IsNullOrEmpty(next) || !string.IsNullOrEmpty(first) || !string.IsNullOrEmpty(previous) || !string.IsNullOrEmpty(last))
                 {
                     MSystemModels model = new MSystemModels();
                     model.FlagDelete = "N";
@@ -181,7 +181,9 @@ namespace SME_WEB_ApiManagement.Controllers
                     model.SystemName = vm.MSystem.SystemName;
                     model.EmployeeId = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
-                    result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, null);
+
+                    result.MSystem = model;
+                    result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, null, currentPageNumber,PageSize);
                     if (result.LSystem != null)
                     {
                         totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
@@ -215,7 +217,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     model.FlagDelete = "N";
                     model.EmployeeId = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
-
+                    result.MSystem = model;
                     result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
                     totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
                     result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, PageSize);
@@ -244,6 +246,7 @@ namespace SME_WEB_ApiManagement.Controllers
         {
 
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
             #region panging
             int curpage = 0;
             int totalpage = 0;
@@ -558,6 +561,20 @@ namespace SME_WEB_ApiManagement.Controllers
                 return Json(new { success = true });
             else
                 return Json(new { success = false, message = "ไม่พบระบบหรือเกิดข้อผิดพลาด" });
+        }
+
+        [HttpPost]
+        public JsonResult UpdateStatus(int id, bool flagActive)
+        {
+            var upsertModel = new MSystemModels
+            {
+                Id = id,
+                FlagActive = flagActive
+            };
+            var result = SystemDAO.UpdateStatusSystem(upsertModel, API_Path_Main + API_Path_Sub, null);
+
+            // ส่งข้อความสำเร็จกลับไป
+            return Json(new { success = true, message = "บันทึกข้อมูลสำเร็จ" });
         }
     }
 }

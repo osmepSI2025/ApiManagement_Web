@@ -37,54 +37,117 @@ namespace SME_WEB_ApiManagement.Controllers
             _callAPIService = callAPIService;
 
         }
-        public IActionResult Index(ViewErroApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
-            string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
+        //public IActionResult Index(ViewErroApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
+        //    string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
+        //{
+        //    #region panging
+        //    int curpage = 0;
+        //    int totalpage = 0;
+
+        //    if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
+        //    if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
+        //    if (!string.IsNullOrEmpty(first)) currentPageNumber = 1;
+        //    else if (!string.IsNullOrEmpty(previous)) currentPageNumber = (curpage == 1) ? 1 : curpage - 1;
+        //    else if (!string.IsNullOrEmpty(next)) currentPageNumber = (curpage == totalpage) ? totalpage : curpage + 1;
+        //    else if (!string.IsNullOrEmpty(last)) currentPageNumber = totalpage;
+
+        //    int PageSizeDummy = PageSize;
+        //    int totalCount = 0;
+        //    PageSize = PageSizeDummy;
+        //    #endregion End panging
+
+        //    ViewErroApiModels result = new ViewErroApiModels();
+        //    try
+        //    {
+        //        if (!string.IsNullOrEmpty(searchData)|| !string.IsNullOrEmpty(first)|| !string.IsNullOrEmpty(last))
+        //        {
+        //           var lerror = ErrorApiDAO.GetErrorApiBySearch(vm.ErrorModel, API_Path_Main + API_Path_Sub, null,currentPageNumber,PageSize);
+        //            result.LError = lerror.LError;
+
+        //            result.PageModel = Service_CenterDAO.LoadPagingViewModel(lerror.totalList??0, currentPageNumber, PageSize);
+        //            result.totalList = lerror.totalList ?? 0;
+        //        }
+        //        else 
+        //        {
+        //            TErrorApiLogModels model = new TErrorApiLogModels();
+
+        //            var lerror = ErrorApiDAO.GetErrorApiBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+        //            result.LError = lerror.LError;
+        //            result.PageModel = Service_CenterDAO.LoadPagingViewModel(lerror.totalList ?? 0, currentPageNumber, PageSize);
+        //            result.totalList = lerror.totalList ?? 0;
+
+
+        //        }
+
+
+        //        result.LSystem = SystemDAO.GetSystem(API_Path_Main + API_Path_Sub, null);
+
+        //        var serviceCenter = new ServiceCenter(_configuration, _callAPIService);
+
+
+        //        return View(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return View(result);
+        //    }
+        //}
+
+        public IActionResult Index(
+    ViewErroApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
+    string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
-            #region panging
-            int curpage = 0;
-            int totalpage = 0;
-
+            int curpage = 1;
             if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
-            if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
-            if (!string.IsNullOrEmpty(first)) currentPageNumber = 1;
-            else if (!string.IsNullOrEmpty(previous)) currentPageNumber = (curpage == 1) ? 1 : curpage - 1;
-            else if (!string.IsNullOrEmpty(next)) currentPageNumber = (curpage == totalpage) ? totalpage : curpage + 1;
-            else if (!string.IsNullOrEmpty(last)) currentPageNumber = totalpage;
 
-            int PageSizeDummy = PageSize;
-            int totalCount = 0;
-            PageSize = PageSizeDummy;
-            #endregion End panging
+            int currentPageNumber = curpage;
+            int pageSize = PageSize;
 
             ViewErroApiModels result = new ViewErroApiModels();
             try
             {
-                if (!string.IsNullOrEmpty(searchData))
-                {
-                   var lerror = ErrorApiDAO.GetErrorApiBySearch(vm.ErrorModel, API_Path_Main + API_Path_Sub, null);
-                    result.LError = lerror.LError;
+                // Get total count first
+                int totalCount;
+                int totalpage = 0;
+               
 
-                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(lerror.totalList??0, currentPageNumber, PageSize);
-                    result.totalList = lerror.totalList ?? 0;
+                // Update currentPageNumber based on button
+                if (!string.IsNullOrEmpty(first)) currentPageNumber = 1;
+                else if (!string.IsNullOrEmpty(previous)) currentPageNumber = (curpage == 1) ? 1 : curpage - 1;
+                else if (!string.IsNullOrEmpty(next)) currentPageNumber = (curpage == totalpage) ? totalpage : curpage + 1;
+                else if (!string.IsNullOrEmpty(last)) currentPageNumber = totalpage;
+                if (!string.IsNullOrEmpty(searchData) || !string.IsNullOrEmpty(first) || !string.IsNullOrEmpty(last))
+                {
+                    //var lerror = ErrorApiDAO.GetErrorApiBySearch(vm.ErrorModel, API_Path_Main + API_Path_Sub, null, curpage, pageSize);
+                    //totalCount = lerror.totalList ?? 0;
+
+                    // Calculate total pages
+
+
+                    // Query again with correct page
+                    var lerror = ErrorApiDAO.GetErrorApiBySearch(vm.ErrorModel, API_Path_Main + API_Path_Sub, null, currentPageNumber, pageSize);
+                    result.LError = lerror.LError;
+                    totalCount = lerror.totalList ?? 0;
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, pageSize);
+                    result.totalList = totalCount;
                 }
-                else 
+                else
                 {
                     TErrorApiLogModels model = new TErrorApiLogModels();
+                    //var lerror = ErrorApiDAO.GetErrorApiBySearch(model, API_Path_Main + API_Path_Sub, "N", curpage, pageSize, null);
+                    //totalCount = lerror.totalList ?? 0;
 
-                    var lerror = ErrorApiDAO.GetErrorApiBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+
+                    var lerror = ErrorApiDAO.GetErrorApiBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, pageSize, null);
                     result.LError = lerror.LError;
-                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(lerror.totalList ?? 0, currentPageNumber, PageSize);
-                    result.totalList = lerror.totalList ?? 0;
-
-
+                    totalCount = lerror.totalList ?? 0;
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(totalCount, currentPageNumber, pageSize);
+                    result.totalList = totalCount;
                 }
 
- 
                 result.LSystem = SystemDAO.GetSystem(API_Path_Main + API_Path_Sub, null);
-
                 var serviceCenter = new ServiceCenter(_configuration, _callAPIService);
-            
-              
+
                 return View(result);
             }
             catch (Exception ex)
@@ -92,8 +155,6 @@ namespace SME_WEB_ApiManagement.Controllers
                 return View(result);
             }
         }
-
-
         [HttpPost]
         public JsonResult DeleteSystem(int id)
         {

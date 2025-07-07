@@ -175,18 +175,13 @@ $(document).on('click', '.editbtn', function () {
                             <label>ผู้ใช้บริการ</label>
                             <input class="form-control" type="text" asp-for="MOrg.OrganizationName" placeholder="Ex. ฝ่าย..." />
                         </div>
-                        <div class="col-md-6">
-                            <label>วันที่สร้าง</label>
-                            <input class="form-control" type="date" asp-for="MOrg.CreateDate" />
-                        </div>
-                        <div class="col-md-6">
-                            <label>วันที่แก้ไขล่าสุด</label>
-                            <input class="form-control" type="date" asp-for="MOrg.UpdateDate" />
-                        </div>
+                      
                     </div>
                     <div class="text-center m-t-10">
-                        <button class="btn btn_search text-color-botton" name="searchData" id="searchData" value="searchData">ค้นหา</button>
-                        <button class="btn btn_search text-color-botton" name="clearSearcData" id="clearSearcData" value="clearSearcData">Clear</button>
+                       
+                        <button class="btn btn-outline-primary btn-custom" name="clearSearcData" id="clearSearcData" value="clearSearcData" type="submit">ล้างข้อมูล</button>
+                        <button class="btn btn-primary btn-custom" name="searchData" id="searchData" value="searchData" type="submit">ค้นหา</button>
+
                     </div>
                     <br /><br />
                 </div>

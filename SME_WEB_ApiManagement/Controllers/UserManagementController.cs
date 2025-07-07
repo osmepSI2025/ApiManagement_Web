@@ -148,11 +148,12 @@ namespace SME_WEB_ApiManagement.Controllers
             }
         }
         // GET: UserManagement/Setting/{employeeId}
+       
         public async Task<ActionResult> Setting(string employeeId)
         {
             //decode base64
 
-            string DecodeEmpId = Service_CenterDAO.Decoderbase64(employeeId);
+            string DecodeEmpId = Service_CenterDAO.DecryptBase64(employeeId);
             EmployeeModels empid = new EmployeeModels
             {
                 EmployeeId = DecodeEmpId
@@ -186,6 +187,7 @@ namespace SME_WEB_ApiManagement.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
+   
         public async Task<ActionResult> Setting(UserSystemSettingViewModel model)
         {
             if (ModelState.IsValid)
@@ -194,6 +196,7 @@ namespace SME_WEB_ApiManagement.Controllers
                 //await _employeeService.RemoveAllEmployeeMapSystemsAsync(model.EmployeeId);
 
                 // Add new mappings
+                string DecodeEmpId = Service_CenterDAO.DecryptBase64(model.EmployeeId);
                 List<TEmployeeMapSystemModels> Mdata = new List<TEmployeeMapSystemModels>();
                 if (model.SelectedSystemIds != null)
                 {
@@ -201,7 +204,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     {
                         var map = new TEmployeeMapSystemModels
                         {
-                            EmployeeId = model.EmployeeId,
+                            EmployeeId = DecodeEmpId,
                             SystemApiId = systemId,
                             FlagActive = true,
                             CreateBy = User.Identity?.Name,

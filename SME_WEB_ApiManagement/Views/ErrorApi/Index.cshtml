@@ -1,5 +1,4 @@
-﻿
-@model SME_WEB_ApiManagement.Models.ViewErroApiModels
+﻿@model SME_WEB_ApiManagement.Models.ViewErroApiModels
 @{
     ViewData["Title"] = "Error list";
  
@@ -109,20 +108,31 @@
                     </tbody>
                 </table>
             </div>
-            <div class="table-footer">
-                <div class="pagination-custom">
-                    <button type="submit" class="btn btn-light" name="first" value="first" title="หน้าแรก"><i class="fa fa-angle-double-left"></i></button>
-                    <button type="submit" class="btn btn-light" name="previous" value="previous" title="ก่อนหน้า"><i class="fa fa-angle-left"></i></button>
-                    <span>Page</span>
-                    <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly />
-                    <span>of @Model.PageModel.TotalPage</span>
-                    <button type="submit" class="btn btn-light" name="next" value="next" title="ถัดไป"><i class="fa fa-angle-right"></i></button>
-                    <button type="submit" class="btn btn-light" name="last" value="last" title="หน้าสุดท้าย"><i class="fa fa-angle-double-right"></i></button>
+            @if (Model.LError != null && Model.LError.Any())
+            {
+                <div class="table-footer">
+                    <div class="pagination-custom">
+                        <button type="submit" class="btn btn-light" name="first" value="first" title="หน้าแรก" @(Model.PageModel.CurrentPageNumber == 1 ? "disabled" : "")>
+                            <i class="fa fa-angle-double-left"></i>
+                        </button>
+                        <button type="submit" class="btn btn-light" name="previous" value="previous" title="ก่อนหน้า" @(Model.PageModel.CurrentPageNumber == 1 ? "disabled" : "")>
+                            <i class="fa fa-angle-left"></i>
+                        </button>
+                        <span>Page</span>
+                        <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly />
+                        <span>of @Model.PageModel.TotalPage</span>
+                        <button type="submit" class="btn btn-light" name="next" value="next" title="ถัดไป" @(Model.PageModel.CurrentPageNumber == Model.PageModel.TotalPage ? "disabled" : "")>
+                            <i class="fa fa-angle-right"></i>
+                        </button>
+                        <button type="submit" class="btn btn-light" name="last" value="last" title="หน้าสุดท้าย" @(Model.PageModel.CurrentPageNumber == Model.PageModel.TotalPage ? "disabled" : "")>
+                            <i class="fa fa-angle-double-right"></i>
+                        </button>
+                    </div>
+                    <div>
+                        แสดง @((Model.LSystem?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LError.Count()} จาก {Model.PageModel.TotalPage} รายการ" : "0 รายการ")
+                    </div>
                 </div>
-                <div>
-                    แสดง @((Model.LSystem?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LSystem.Count()} จาก {Model.PageModel.TotalPage} รายการ" : "0 รายการ")
-                </div>
-            </div>
+            }
           
         </div>
 

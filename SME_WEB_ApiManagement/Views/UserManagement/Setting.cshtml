@@ -12,8 +12,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5>ชื่อผู้ใช้: @Model.FirstNameTh @Model.LastNameTh</h5>
-                <h6>ตำแหน่ง: @Model.PositionName</h6>
-                <h6>ส่วน: @Model.BusinessUnitName</h6>
+ 
             </div>
         </div>
     </div>
@@ -49,18 +48,12 @@
     </div>
 </div>
 
-<h2>ตั้งค่าระบบที่ดูแลได้</h2>
+
 
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-success">@TempData["Message"]</div>
 }
 
-<div class="card mb-3">
-    <div class="card-body">
-        <h5>ชื่อผู้ใช้: @Model.FirstNameTh @Model.LastNameTh</h5>
-        <h6>ตำแหน่ง: @Model.PositionName</h6>
-        <h6>ส่วน: @Model.BusinessUnitName</h6>
-    </div>
-</div>
+
 

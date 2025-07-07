@@ -109,11 +109,21 @@
                     <textarea id="w3review" name="w3review" rows="4" class="form-control" placeholder="Enter your text here..."></textarea>
                 </div>
             </div>
-            <div class="row">
-                <div class="col text-center">
-                    <button class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData" @(isSuperAdmin ? "" : "disabled")>บันทึก</button>                    <button class="btn btn_cancel" type="button">ยกเลิก</button>
+            @if (ViewBag.UserRole == "SUPERADMIN")
+            {
+
+                <div class="row">
+                    <div class="col text-center">
+                        <button class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData" @(isSuperAdmin ? "" : "disabled")>บันทึก</button>                    <button class="btn btn_cancel" type="button">ยกเลิก</button>
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <a class="btn btn_search text-color-botton m-r-10" href="~/RegisterAPI/RegisterList">กลับ</a>
+            
+            }
+
         </div>
     </div>
 }

@@ -476,10 +476,38 @@ namespace SME_WEB_ApiManagement.DAO
             return formattedDate;
         }
 
-        public static string Decoderbase64(string base64EncodedData)
+   
+        public static string DecryptBase64(string base64EncodedData)
         {
-            var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
-            return Encoding.UTF8.GetString(base64EncodedBytes);
+            if (string.IsNullOrEmpty(base64EncodedData))
+                return string.Empty;
+
+            try
+            {
+                var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+                return Encoding.UTF8.GetString(base64EncodedBytes);
+            }
+            catch
+            {
+                // กรณี decode ไม่ได้ (string ไม่ใช่ base64 ที่ถูกต้อง)
+                return string.Empty;
+            }
+        }
+        public static string EncryptBase64(string plainText)
+        {
+            if (string.IsNullOrEmpty(plainText))
+                return string.Empty;
+
+            try
+            {
+                var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+                return Convert.ToBase64String(plainTextBytes);
+            }
+            catch
+            {
+                // กรณี encode ไม่ได้
+                return string.Empty;
+            }
         }
     }
 }

@@ -95,6 +95,52 @@
             }
         });
     }
+
+        let pendingToggle = { id: null, flagActive: null, $checkbox: null };
+
+    $(document).on('change', '.active-toggle', function () {
+        // Store the toggle state and element
+        pendingToggle.id = $(this).data('id');
+        pendingToggle.flagActive = $(this).is(':checked');
+        pendingToggle.$checkbox = $(this);
+
+        // Show confirm modal
+        $('#ConfirmUpdateStatusModal').modal('show');
+    });
+
+    // On confirm, send AJAX and close modal
+    $(document).on('click', '#btnConfirmUpdateStatus', function () {
+        $('#ConfirmUpdateStatusModal').modal('hide');
+        $.ajax({
+            url: '/SysMasterAPI/UpdateStatus',
+            type: 'POST',
+            data: { id: pendingToggle.id, flagActive: pendingToggle.flagActive },
+            success: function (res) {
+                if (res.success) {
+                    // แสดง popup แจ้งเตือน
+                    $('#successModalBody').text(res.message || 'บันทึกข้อมูลสำเร็จ');
+                    $('#successModal').modal('show');
+                } else {
+                    alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                    // Revert toggle if failed
+                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                }
+            },
+            error: function () {
+                alert('เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+            }
+        });
+    });
+
+    // If cancel, revert the toggle
+    $('#ConfirmUpdateStatusModal').on('hidden.bs.modal', function () {
+        if (pendingToggle.$checkbox) {
+            // If not confirmed, revert the toggle to previous state
+            pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+            pendingToggle = { id: null, flagActive: null, $checkbox: null };
+        }
+    });
 </script>
 
 @using (Html.BeginForm("SysMasterAPI", "SysMasterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
@@ -111,16 +157,14 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label">สถานะ</label>
                     <div class="input-group">
-                        <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
+                        <select asp-for="InsMSystem.FlagActive" asp-items="vDdlStatus" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
                             <option value="">--กรุณาเลือก--</option>
                         </select>
-                        <span class="input-group-text bg-white border-0">
-                            <i class="fa fa-chevron-down"></i>
-                        </span>
+                    
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">วันที่สร้าง</label>
+                    <label class="form-label">วันที่เริ่มต้น</label>
                     <div class="input-group">
                         <input class="form-control" type="date" asp-for="MSystem.StartDate" placeholder="กรุณาระบุ" />
                       
@@ -153,11 +197,12 @@
                     <thead>
                         <tr>
                             <th  >ลำดับ</th>
-                            <th style="width:55%;">ชื่อระบบ</th>
+                            <th style="width:30%;">ชื่อระบบ</th>
                             <th  >สถานะ API</th>
                             <th>วันที่เริ่มต้น-สิ้นสุด</th>
                             <th  >วันที่สร้าง</th>
                             <th >วันที่แก้ไขล่าสุด</th>
+                            <th scope="col">Update Status</th>
                             <th ></th>
                         </tr>
                     </thead>
@@ -175,14 +220,22 @@
                                             @w.SystemName
                                         </a>
                                     </td>
-                                    <td>@(w.CreateDate.HasValue? w.StartDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")- @(w.CreateDate.HasValue? w.EndDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
+                                    <td>@(w.CreateDate.HasValue? w.StartDate.Value.ToString("dd/MM/yyyy") : "-")- @(w.CreateDate.HasValue? w.EndDate.Value.ToString("dd/MM/yyyy") : "-")</td>
                                     <td>
                                         <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
                                             @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")
                                         </span>
                                     </td>
-                                    <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
-                                    <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
+                                    <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
+                                    <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
+                                    <td class="text-center">
+                                        <label class="switch">
+                                            <input type="checkbox" class="active-toggle"
+                                                   data-id="@w.Id"
+                                                   @(w.FlagActive == true ? "checked" : "") />
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
                                     <td>
                                         <button type="button" class="action-btn editbtn"
                                                 data-id="@w.Id"
@@ -311,6 +364,43 @@
                 <div class="modal-footer n-border" style="align-self: center;">
                     <button class="btn btn_search text-color-botton m-r-10" name="DeleteData" id="DeleteData" value="DeleteData">Submit</button>
                     <button class="btn btn_cancel" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirm Update Status -->
+    <div class="modal fade" id="ConfirmUpdateStatusModal" tabindex="-1" aria-labelledby="ConfirmUpdateStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ConfirmUpdateStatusModalLabel">ยืนยันการเปลี่ยนสถานะ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    คุณต้องการเปลี่ยนสถานะการใช้งานใช่หรือไม่?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnConfirmUpdateStatus">ยืนยัน</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal แจ้งเตือนบันทึกสำเร็จ -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">แจ้งเตือน</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="successModalBody">
+                    <!-- ข้อความแจ้งเตือน -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ตกลง</button>
                 </div>
             </div>
         </div>

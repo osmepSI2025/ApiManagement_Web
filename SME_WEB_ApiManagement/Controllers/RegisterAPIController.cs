@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SME_WEB_ApiManagement.DAO;
 using SME_WEB_ApiManagement.Models;
+using System.Reflection;
 
 namespace SME_WEB_ApiManagement.Controllers
 {
@@ -37,6 +38,7 @@ namespace SME_WEB_ApiManagement.Controllers
             string searchDate = null, string clearSearcData = null)
         {
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
             #region panging
             int curpage = 0;
             int totalpage = 0;
@@ -310,7 +312,19 @@ namespace SME_WEB_ApiManagement.Controllers
             // ถ้าไม่ผ่าน validation หรือ error ให้กลับไปหน้าเดิม
             return View("RegisterList");
         }
+        [HttpPost]
+        public JsonResult UpdateStatus(int id, bool flagActive)
+        {
+            var upsertModel = new MRegisterModels
+            {
+              Id = id,
+              FlagActive = flagActive
+            };
+            var result = SystemDAO.UpdateStatusRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
 
+            // ส่งข้อความสำเร็จกลับไป
+            return Json(new { success = true, message = "บันทึกข้อมูลสำเร็จ" });
+        }
 
     }
 

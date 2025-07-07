@@ -1,13 +1,13 @@
 ﻿@model SME_WEB_ApiManagement.Models.ViewSystemApiModels
 @{
+
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     ViewData["Title"] = "System API";
     var vDdlSystem = ViewBag.vDdlSystem;
     var EmployeeId = ViewBag.EmployeeId;
-}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    var EmployeeRole = ViewBag.EmployeeRole;
+}
 
 <form method="post" asp-action="SysMasterAPIConnectInbound" asp-controller="SysMasterAPI">
     <div class="wrap-all-content">
@@ -101,9 +101,13 @@
                     <div class="content_table">
                         <div class="header_content d-flex justify-content-between align-items-center">
                             <h6>รายการ API </h6>
-                            <button type="button" class="btn btn-primary" onclick="showCreateModal()">
-                                <span>+</span> เพิ่ม API
-                            </button>
+                            @if (EmployeeRole=="SUPERADMIN")
+                            {
+                                <button type="button" class="btn btn-primary" onclick="showCreateModal()">
+                                    <span>+</span> เพิ่ม API
+                                </button>
+                            }
+                           
                         </div>
                         <div class="line"></div>
                         <div class="table-responsive">
@@ -115,7 +119,11 @@
                                         <th style="width:65%;">Service Name</th>
                                         <th>End Point</th>
                                         <th>สถานะ</th>
-                                        <th></th>
+                                        @if (EmployeeRole == "SUPERADMIN") 
+                                        {
+                                            <th></th>
+                                        }
+                                     
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,14 +138,18 @@
                                                 <td>@w.ApiServiceName</td>
                                                 <td>@w.EndPoint</td>
                                                 <td>@(w.FlagActive ? "ใช้งาน" : "ปิดการใช้งาน")</td>
-                                                <td style="text-align:center;">
-                                                    <button type="button" class="action-btn editbtn" data-id="@w.Id" title="Edit">
-                                                        <i class="fa fa-pen-to-square" style="color: #34A5EB; cursor: pointer;"></i>
-                                                    </button>
-                                                    <button type="button" class="action-btn delete" onclick="deleteSystem(@w.Id)" title="ลบ">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </td>
+                                                @if (EmployeeRole == "SUPERADMIN")
+{
+                                                    <td style="text-align:center;">
+                                                        <button type="button" class="action-btn editbtn" data-id="@w.Id" title="Edit">
+                                                            <i class="fa fa-pen-to-square" style="color: #34A5EB; cursor: pointer;"></i>
+                                                        </button>
+                                                        <button type="button" class="action-btn delete" onclick="showDeleteConfirm(@w.Id)" title="ลบ">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </td>
+}
+                                               
                                             </tr>
                                             no++;
                                         }
@@ -154,24 +166,34 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center m-t-10">
-                <button type="button" class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData">Submit</button>
-                <button class="btn btn_cancel">Cancel</button>
-            </div>
+
+            @if (EmployeeRole == "SUPERADMIN")
+            {
+                <div class="text-center m-t-10">
+                    <button type="button" class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData">Submit</button>
+                    <button class="btn btn_cancel">Cancel</button>
+                </div>
+            }else
+            {
+              
+                  <div class="text-center m-t-10">
+             <a class="btn btn_search text-color-botton m-r-10" href="~/SysMasterAPI/SysMasterAPIInbound">กลับ</a>
+                </div>
+            }
+
+          
         </div>
     </div>
 </form>
 
 <!-- Modal: Create/Edit API -->
-<div class="modal fade" id="CreateApiModal" tabindex="-1" role="dialog" aria-labelledby="CreateApiModalLabel" aria-hidden="true">
+<div class="modal fade" id="CreateApiModal" tabindex="-1" aria-labelledby="CreateApiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <form method="post" asp-action="SysMasterAPIConnectInbound" asp-controller="SysMasterAPI">
                 <div class="modal-header" style="background: #2580c2; color: #fff;">
                     <h5 class="modal-title w-100 text-center" id="CreateApiModalLabel">สร้าง/แก้ไข API</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span class="x-sign" aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="TSystemAPI.Id" id="TSystemAPI_Id_Modal" />
@@ -253,184 +275,183 @@
                     <input type="hidden" asp-for="TSystemAPI.OwnerSystemCode" value="@Model.MSystemInfo.SystemCode" />
                     <input type="hidden" asp-for="TSystemAPI.CreateBy" value="@EmployeeId" />
                     <input type="hidden" asp-for="TSystemAPI.UpdateBy" value="@EmployeeId" />
-                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">ยกเลิก</button>
                     <button type="button" class="btn btn-primary" id="saveSubDataBtn" name="saveSubDataBtn" value="saveSubDataBtn">บันทึก</button>
                 </div>
-                <div class="modal fade" id="ConfirmSaveSubModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmSaveSubModalLabel" aria-hidden="true">
+                <div class="modal fade" id="ConfirmSaveSubModal" tabindex="-1" aria-labelledby="ConfirmSaveSubModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="ConfirmSaveSubModalLabel">ยืนยันการบันทึก</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span class="x-sign" aria-hidden="true">&times;</span>
-                                </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <p>คุณต้องการบันทึกข้อมูล API นี้ใช่หรือไม่?</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" id="confirmSaveSubBtn">ยืนยัน</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                                <button type="button" class="btn btn_cancel" data-bs-dismiss="modal">ยกเลิก</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
-    <!-- Modal: Confirm Save (modal form) -->
-
 </div>
 
 <!-- Modal: Confirm Delete -->
-<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ViewCancelModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="min-width: 80%;">
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="reqDetailModalLabel">Confirm Delete</h5>
-                <button type="button" class="close button_close" data-dismiss="modal" aria-label="Close">
-                    <span class="x-sign" aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="ConfirmDeleteModalLabel">ยืนยันการลบ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="card" style="margin-top: 1px;">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label>Are you sure you want to Delete this item?</label>
-                        <input type="hidden" id="TArrivalDetaiModels_Id" />
-                    </div>
-                </div>
+            <div class="modal-body">
+                <p>คุณต้องการลบข้อมูลนี้ใช่หรือไม่?</p>
+                <input type="hidden" id="deleteId" />
             </div>
-            <div class="modal-footer n-border" style="align-self: center;">
-                <button class="btn btn_search text-color-botton m-r-10" name="DeleteEmp" id="DeleteEmp" value="DeleteEmp">Submit</button>
-                <button class="btn btn_cancel">Cancel</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">ลบ</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Modal: Confirm Save (main form) -->
-<div class="modal fade" id="ConfirmSaveModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmSaveModalLabel" aria-hidden="true">
+<div class="modal fade" id="ConfirmSaveModal" tabindex="-1" aria-labelledby="ConfirmSaveModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ConfirmSaveModalLabel">ยืนยันการบันทึก</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span class="x-sign" aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="confirmSaveBtn">ยืนยัน</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
             </div>
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        let deleteId = null;
 
+        function showDeleteConfirm(id) {
+            deleteId = id;
+            var modal = new bootstrap.Modal(document.getElementById('ConfirmDeleteModal'));
+            modal.show();
+        }
 
-<script>
-    function showCreateModal() {
-        $('#TSystemAPI_Id_Modal').val('');
-        $('#TSystemAPI_ApiMethod_Modal').val('');
-        $('#TSystemAPI_ApiServiceName_Modal').val('');
-        $('#TSystemAPI_ApiServiceCode_Modal').val('');
-        $('#TSystemAPI_EndPoint_Modal').val('');
-        $('#apiActive').prop('checked', false);
-        $('#CreateApiModal').modal('show');
-    }
+        window.showCreateModal = function() {
+            document.getElementById('TSystemAPI_Id_Modal').value = '';
+            document.getElementById('TSystemAPI_ApiMethod_Modal').value = '';
+            document.getElementById('TSystemAPI_ApiServiceName_Modal').value = '';
+            document.getElementById('TSystemAPI_ApiServiceCode_Modal').value = '';
+            document.getElementById('TSystemAPI_EndPoint_Modal').value = '';
+            document.getElementById('apiActive').checked = false;
 
-    $(document).ready(function () {
-        // Edit API
-        $('.editbtn').on('click', function () {
-            var id = $(this).data('id');
-            $.ajax({
-                url: '/SysMasterAPI/GetApiDetail',
-                type: 'GET',
-                data: { id: id },
-                success: function (data) {
-                    if (data && data.id) {
-                        $('#TSystemAPI_Id_Modal').val(data.id);
-                        $('#TSystemAPI_ApiMethod_Modal').val(data.apiMethod);
-                        $('#TSystemAPI_ApiServiceName_Modal').val(data.apiServiceName);
-                        $('#TSystemAPI_ApiServiceCode_Modal').val(data.apiServiceCode);
-                        $('#TSystemAPI_EndPoint_Modal').val(data.endPoint);
-                        $('#apiActive').prop('checked', data.flagActive);
+            var myModal = new bootstrap.Modal(document.getElementById('CreateApiModal'));
+            myModal.show();
+        }
 
-                        $('input[name="TSystemAPI.ApiRequestParamater"]').val(data.apiRequestParamater);
-                        $('input[name="TSystemAPI.ApiRequestParamaterType"]').val(data.apiRequestParamaterType);
-                        $('textarea[name="TSystemAPI.ApiRequestDescription"]').val(data.apiRequestDescription);
-                        $('textarea[name="TSystemAPI.ApiRequestExample"]').val(data.apiRequestExample);
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.editbtn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = this.getAttribute('data-id');
+                    fetch('/SysMasterAPI/GetApiDetail?id=' + id)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.id) {
+                                document.getElementById('TSystemAPI_Id_Modal').value = data.id;
+                                document.getElementById('TSystemAPI_ApiMethod_Modal').value = data.apiMethod;
+                                document.getElementById('TSystemAPI_ApiServiceName_Modal').value = data.apiServiceName;
+                                document.getElementById('TSystemAPI_ApiServiceCode_Modal').value = data.apiServiceCode;
+                                document.getElementById('TSystemAPI_EndPoint_Modal').value = data.endPoint;
+                                document.getElementById('apiActive').checked = data.flagActive;
 
-                        $('input[name="TSystemAPI.ApiResponseParamater"]').val(data.apiResponseParamater);
-                        $('input[name="TSystemAPI.ApiResponseParamaterType"]').val(data.apiResponseParamaterType);
-                        $('textarea[name="TSystemAPI.ApiResponseDescription"]').val(data.apiResponseDescription);
-                        $('textarea[name="TSystemAPI.ApiResponseExample"]').val(data.apiResponseExample);
+                                // set other fields if needed
 
-                        $('#CreateApiModal').modal('show');
+                                var myModal = new bootstrap.Modal(document.getElementById('CreateApiModal'));
+                                myModal.show();
+                            } else {
+                                alert('ไม่พบข้อมูล');
+                            }
+                        })
+                        .catch(() => alert('เกิดข้อผิดพลาด'));
+                });
+            });
+
+            // Popconfirm for saveData (main form)
+            document.getElementById('saveData').addEventListener('click', function () {
+                var modal = new bootstrap.Modal(document.getElementById('ConfirmSaveModal'));
+                modal.show();
+            });
+
+            document.getElementById('confirmSaveBtn').addEventListener('click', function () {
+                var form = document.getElementById('saveData').closest('form');
+                var input = form.querySelector('input[name="saveData"]');
+                if (input) input.remove();
+                var hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'saveData';
+                hidden.value = 'saveData';
+                form.appendChild(hidden);
+                var modal = bootstrap.Modal.getInstance(document.getElementById('ConfirmSaveModal'));
+                modal.hide();
+                setTimeout(function () {
+                    form.submit();
+                }, 300);
+            });
+
+            // Popconfirm for saveSubData (modal form)
+            document.getElementById('saveSubDataBtn').addEventListener('click', function () {
+                var modal = new bootstrap.Modal(document.getElementById('ConfirmSaveSubModal'));
+                modal.show();
+            });
+
+            document.getElementById('confirmSaveSubBtn').addEventListener('click', function () {
+                var form = this.closest('form');
+                var input = form.querySelector('input[name="saveSubData"]');
+                if (input) input.remove();
+                var hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'saveSubData';
+                hidden.value = 'saveSubData';
+                form.appendChild(hidden);
+                var modal = bootstrap.Modal.getInstance(document.getElementById('ConfirmSaveSubModal'));
+                modal.hide();
+                setTimeout(function () {
+                    form.submit();
+                }, 300);
+            });
+
+            document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                if (!deleteId) return;
+                fetch('@Url.Action("DeleteApiDetail", "SysMasterAPI")', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'id=' + encodeURIComponent(deleteId)
+                })
+                .then(response => response.json())
+                .then(res => {
+                    var modal = bootstrap.Modal.getInstance(document.getElementById('ConfirmDeleteModal'));
+                    modal.hide();
+                    if (res.success) {
+                        alert('ลบข้อมูลสำเร็จ');
+                        location.reload();
                     } else {
-                        alert('ไม่พบข้อมูล');
+                        alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
                     }
-                },
-                error: function () {
-                    alert('เกิดข้อผิดพลาด');
-                }
+                })
+                .catch(() => alert('เกิดข้อผิดพลาดในการลบข้อมูล'));
             });
         });
-
-        // Popconfirm for saveData (main form)
-        $('#saveData').on('click', function () {
-            $('#ConfirmSaveModal').modal('show');
-        });
-
-        $('#confirmSaveBtn').on('click', function () {
-            var $form = $('#saveData').closest('form');
-            $form.find('input[name="saveData"]').remove(); // ป้องกันซ้ำ
-            $form.append('<input type="hidden" name="saveData" value="saveData" />');
-            $('#ConfirmSaveModal').modal('hide');
-            setTimeout(function () {
-                $form.submit();
-            }, 300);
-        });
-
-        // Popconfirm for saveSubData (modal form)
-        $('#saveSubDataBtn').on('click', function () {
-            $('#ConfirmSaveSubModal').modal('show');
-        });
-
-        $('#confirmSaveSubBtn').on('click', function () {
-            var $form = $(this).closest('form');
-            $form.find('input[name="saveSubData"]').remove(); // ป้องกันซ้ำ
-            $form.append('<input type="hidden" name="saveSubData" value="saveSubData" />');
-            $('#ConfirmSaveSubModal').modal('hide');
-            setTimeout(function () {
-                $form.submit();
-            }, 300);
-        });
-    });
-
-    function deleteSystem(id) {
-        if (!confirm('คุณต้องการลบระบบนี้ใช่หรือไม่?')) {
-            return;
-        }
-        $.ajax({
-            url: '@Url.Action("DeleteApiDetail", "SysMasterAPI")',
-            type: 'POST',
-            data: { id: id },
-            success: function (res) {
-                if (res.success) {
-                    alert('ลบข้อมูลสำเร็จ');
-                    location.reload();
-                } else {
-                    alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
-                }
-            },
-            error: function () {
-                alert('เกิดข้อผิดพลาดในการลบข้อมูล');
-            }
-        });
-    }
-</script>
+    </script>
+}
