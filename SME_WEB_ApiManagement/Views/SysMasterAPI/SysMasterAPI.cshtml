@@ -5,145 +5,21 @@
     var vDdlOrg = ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
- 
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-    function GetCreate() {
-        $("#CreateModalLabel").text("สร้างระบบ API");
-        $("#CreateModal").modal("show");
+<style>
+    .select2-container .select2-selection--single {
+        height: 38px !important;
+        padding: 6px 12px;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
     }
+</style>
 
-    $(document).ready(function () {
-        $(".editbtn").click(function () {
-            var id = $(this).data("id");
-            var systemName = $(this).data("systemname");
-            var flagActive = $(this).data("flagactive");
-            var ownerSystemCode = $(this).data("ownersystemcode");
-            $("#InsMSystem_Id").val(id);
-            $("#InsMSystem_SystemName").val(systemName);
-            $("#InsMSystem_OwnerSystemCode").val(ownerSystemCode).trigger('change');
-            // Properly set checkbox state for FlagActive
-            if (flagActive === true || flagActive === "True" || flagActive === "true") {
-                $("#InsMSystem_FlagActive").prop("checked", true);
-            } else {
-                $("#InsMSystem_FlagActive").prop("checked", false);
-            }
-            $("#CreateModalLabel").text("แก้ไขข้อมูล");
-            $("#CreateModal").modal("show");
-        });
-
-        $("#saveData").click(function (e) {
-            var ownerSystemCode = $("#InsMSystem_OwnerSystemCode").val();
-            var systemName = $("#InsMSystem_SystemName").val();
-
-            if (!ownerSystemCode || ownerSystemCode.trim() === "") {
-                alert("กรุณาเลือกหน่วยงานเจ้าของ API");
-                $("#InsMSystem_OwnerSystemCode").focus();
-                e.preventDefault();
-                return false;
-            }
-            if (!systemName || systemName.trim() === "") {
-                alert("กรุณาระบุชื่อระบบ");
-                $("#InsMSystem_SystemName").focus();
-                e.preventDefault();
-                return false;
-            }
-
-            var confirmed = confirm("คุณต้องการบันทึกข้อมูลใช่หรือไม่?");
-            if (!confirmed) {
-                e.preventDefault();
-                return false;
-            }
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('.search-dropdown').select2({
-            width: 'resolve',
-            placeholder: "กรุณาระบุ",
-            allowClear: true,
-            dropdownParent: $('#CreateModal') // ถ้าอยู่ใน modal
-        });
-    });
-</script>
-<script>
-    function deleteSystem(id) {
-        if (!confirm('คุณต้องการลบระบบนี้ใช่หรือไม่?')) {
-            return;
-        }
-        $.ajax({
-            url: '@Url.Action("DeleteSystem", "SysMasterAPI")',
-            type: 'POST',
-            data: { id: id },
-            success: function (res) {
-                if (res.success) {
-                    alert('ลบข้อมูลสำเร็จ');
-                    location.reload();
-                } else {
-                    alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
-                }
-            },
-            error: function () {
-                alert('เกิดข้อผิดพลาดในการลบข้อมูล');
-            }
-        });
-    }
-
-        let pendingToggle = { id: null, flagActive: null, $checkbox: null };
-
-    $(document).on('change', '.active-toggle', function () {
-        // Store the toggle state and element
-        pendingToggle.id = $(this).data('id');
-        pendingToggle.flagActive = $(this).is(':checked');
-        pendingToggle.$checkbox = $(this);
-
-        // Show confirm modal
-        $('#ConfirmUpdateStatusModal').modal('show');
-    });
-
-    // On confirm, send AJAX and close modal
-    $(document).on('click', '#btnConfirmUpdateStatus', function () {
-        $('#ConfirmUpdateStatusModal').modal('hide');
-        $.ajax({
-            url: '/SysMasterAPI/UpdateStatus',
-            type: 'POST',
-            data: { id: pendingToggle.id, flagActive: pendingToggle.flagActive },
-            success: function (res) {
-                if (res.success) {
-                    // แสดง popup แจ้งเตือน
-                    $('#successModalBody').text(res.message || 'บันทึกข้อมูลสำเร็จ');
-                    $('#successModal').modal('show');
-                } else {
-                    alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
-                    // Revert toggle if failed
-                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
-                }
-            },
-            error: function () {
-                alert('เกิดข้อผิดพลาดในการอัปเดตสถานะ');
-                pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
-            }
-        });
-    });
-
-    // If cancel, revert the toggle
-    $('#ConfirmUpdateStatusModal').on('hidden.bs.modal', function () {
-        if (pendingToggle.$checkbox) {
-            // If not confirmed, revert the toggle to previous state
-            pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
-            pendingToggle = { id: null, flagActive: null, $checkbox: null };
-        }
-    });
-</script>
-
-@using (Html.BeginForm("SysMasterAPI", "SysMasterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("SysMasterAPI", "SysMasterAPI", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="wrap-all-content">
         <!-- Search Card -->
@@ -156,26 +32,17 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">สถานะ</label>
-                    <div class="input-group">
-                        <select asp-for="InsMSystem.FlagActive" asp-items="vDdlStatus" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
-                            <option value="">--กรุณาเลือก--</option>
-                        </select>
-                    
-                    </div>
+                    <select asp-for="MSystem.FlagActive" asp-items="vDdlStatus" class="form-control search-dropdown" id="Search_FlagActive">
+                        <option value="">--กรุณาเลือก--</option>
+                    </select>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">วันที่เริ่มต้น</label>
-                    <div class="input-group">
-                        <input class="form-control" type="date" asp-for="MSystem.StartDate" placeholder="กรุณาระบุ" />
-                      
-                    </div>
+                    <input class="form-control" type="date" asp-for="MSystem.StartDate" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">วันที่สิ้นสุด</label>
-                    <div class="input-group">
-                        <input class="form-control" type="date" asp-for="MSystem.EndDate" placeholder="กรุณาระบุ" />
-                       
-                    </div>
+                    <input class="form-control" type="date" asp-for="MSystem.EndDate" />
                 </div>
             </div>
             <div class="d-flex justify-content-center mt-2">
@@ -196,18 +63,17 @@
                 <table class="table table-custom table-bordered">
                     <thead>
                         <tr>
-                            <th  >ลำดับ</th>
+                            <th>ลำดับ</th>
                             <th style="width:30%;">ชื่อระบบ</th>
-                            <th  >สถานะ API</th>
                             <th>วันที่เริ่มต้น-สิ้นสุด</th>
-                            <th  >วันที่สร้าง</th>
-                            <th >วันที่แก้ไขล่าสุด</th>
-                            <th scope="col">Update Status</th>
-                            <th ></th>
+                            <th>สถานะ API</th>
+                            <th>วันที่สร้าง</th>
+                            <th>วันที่แก้ไขล่าสุด</th>
+                            <th>Update Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-
                         @if (Model.LSystem != null && Model.LSystem.Any())
                         {
                             var index = 1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize);
@@ -220,7 +86,11 @@
                                             @w.SystemName
                                         </a>
                                     </td>
-                                    <td>@(w.CreateDate.HasValue? w.StartDate.Value.ToString("dd/MM/yyyy") : "-")- @(w.CreateDate.HasValue? w.EndDate.Value.ToString("dd/MM/yyyy") : "-")</td>
+                                    <td>
+                                        @(w.StartDate.HasValue? w.StartDate.Value.ToString("dd-MM-yyyy") : "-")
+                                        -
+                                        @(w.EndDate.HasValue? w.EndDate.Value.ToString("dd-MM-yyyy") : "-")
+                                    </td>
                                     <td>
                                         <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
                                             @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")
@@ -232,7 +102,7 @@
                                         <label class="switch">
                                             <input type="checkbox" class="active-toggle"
                                                    data-id="@w.Id"
-                                                   @(w.FlagActive == true ? "checked" : "") />
+                                                   @(w.FlagActive ? "checked" : "") />
                                             <span class="slider"></span>
                                         </label>
                                     </td>
@@ -242,6 +112,8 @@
                                                 data-systemname="@w.SystemName"
                                                 data-flagactive="@w.FlagActive"
                                                 data-ownersystemcode="@w.OwnerSystemCode"
+                                                data-startdate="@(w.StartDate?.ToString("yyyy-MM-dd"))"
+                                                data-enddate="@(w.EndDate?.ToString("yyyy-MM-dd"))"
                                                 title="แก้ไข">
                                             <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
                                         </button>
@@ -256,7 +128,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="6" class="text-center">ไม่พบข้อมูล</td>
+                                <td colspan="8" class="text-center">ไม่พบข้อมูล</td>
                             </tr>
                         }
                     </tbody>
@@ -285,12 +157,8 @@
                     แสดง @((Model.LSystem?.Count() ?? 0) > 0 ? $"{1 + ((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize)} - {((Model.PageModel.CurrentPageNumber - 1) * Model.PageModel.PageSize) + Model.LSystem.Count()} จาก {Model.PageModel.TotalRows} รายการ" : "0 รายการ")
                 </div>
             </div>
-          
         </div>
     </div>
-
- 
-
 
     <!-- Create/Edit Modal -->
     <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="CreateModalLabel" aria-hidden="true">
@@ -299,44 +167,56 @@
                 <div class="modal-header" style="background: #2196f3;">
                     <h5 class="modal-title text-white w-100 text-center" id="CreateModalLabel">สร้างระบบ API</h5>
                 </div>
-                <div class="modal-body py-4">
-                    <div class="container-fluid">
-                        <div class="col-md-6">
-                            <label class="form-label">หน่วยงานเจ้าของ API <span class="text-danger">*</span></label>
-                            <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg" class="form-control search-dropdown" style="width:100%" id="InsMSystem_OwnerSystemCode">
+                <div class="modal-body py-4" style="background: #f8f9fa; border-radius: 0.5rem;">
+                    <div class="container-fluid px-2 px-md-4">
+                        <input class="form-control" type="hidden" asp-for="InsMSystem.Id" id="InsMSystem_Id" />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="InsMSystem_OwnerSystemCode">
+                                หน่วยงานเจ้าของ API <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="InsMSystem.OwnerSystemCode" asp-items="vDdlOrg"
+                                    class="form-control search-dropdown w-100"
+                                    id="InsMSystem_OwnerSystemCode" style="width:100%;">
                                 <option value="">--กรุณาเลือก--</option>
                             </select>
                         </div>
-                        <div class="row mb-6">
-                            <input class="form-control" type="hidden" asp-for="InsMSystem.Id" id="InsMSystem_Id" />
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">ชื่อระบบ<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" asp-for="InsMSystem.SystemName" placeholder="กรุณาระบุ" id="InsMSystem_SystemName" />
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="InsMSystem_SystemName">
+                                ชื่อระบบ<span class="text-danger">*</span>
+                            </label>
+                            <input class="form-control" type="text" asp-for="InsMSystem.SystemName"
+                                   placeholder="กรุณาระบุ" id="InsMSystem_SystemName" />
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">วันที่เริ่มต้น</label>
+                            <div class="col-12 col-md-6 mb-2 mb-md-0">
+                                <label class="form-label fw-semibold" for="InsMSystem_StartDate">
+                                    วันที่เริ่มต้น
+                                </label>
                                 <input class="form-control" type="date" asp-for="InsMSystem.StartDate" id="InsMSystem_StartDate" />
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">วันที่สิ้นสุด</label>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold" for="InsMSystem_EndDate">
+                                    วันที่สิ้นสุด
+                                </label>
                                 <input class="form-control" type="date" asp-for="InsMSystem.EndDate" id="InsMSystem_EndDate" />
                             </div>
                         </div>
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <label class="form-label">สถานะ <span class="text-danger">*</span></label>
-                                <div class="form-check mt-2">
-                                    <input type="checkbox" name="InsMSystem.FlagActive" id="InsMSystem_FlagActive"
-                                           @(Model.InsMSystem.FlagActive == true ? "checked" : "") value="true" />
-                                    <label class="form-check-label" for="InsMSystem_FlagActive">ใช้งาน</label>
-                                </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold" for="InsMSystem_FlagActive">
+                                สถานะ <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" name="InsMSystem.FlagActive" id="InsMSystem_FlagActive" value="true" />
+                                <label class="form-check-label" for="InsMSystem_FlagActive">ใช้งาน</label>
                             </div>
                         </div>
                         <div class="d-flex justify-content-center mt-4">
-                            <button type="button" class="btn btn-outline-primary btn-custom mx-2" onclick="$('#CreateModal').modal('hide')">ยกเลิก</button>
-                            <button type="submit" class="btn btn-primary btn-custom mx-2" name="saveData" id="saveData" value="saveData">บันทึก</button>
+                            <button type="button" class="btn btn-outline-primary btn-custom mx-2 px-4" onclick="$('#CreateModal').modal('hide')">
+                                ยกเลิก
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-custom mx-2 px-4" name="saveData" id="saveData" value="saveData">
+                                บันทึก
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -368,7 +248,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal Confirm Update Status -->
     <div class="modal fade" id="ConfirmUpdateStatusModal" tabindex="-1" aria-labelledby="ConfirmUpdateStatusModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -387,7 +266,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal แจ้งเตือนบันทึกสำเร็จ -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -405,14 +283,193 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="SuccessStatusModal" tabindex="-1" aria-labelledby="SuccessStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="SuccessStatusModalLabel">แจ้งเตือน</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    บันทึกสถานะเรียบร้อยแล้ว
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ตกลง</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var btnLast = document.getElementById("btnLast");
-        if (btnLast) {
-            btnLast.addEventListener("click", function () {
-                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Select2
+            $('.search-dropdown').select2({
+                width: 'resolve',
+                placeholder: "กรุณาระบุ",
+                allowClear: true,
+                dropdownParent: $('#CreateModal')
             });
-        }
-    });
-</script>
+
+            // Create
+            window.GetCreate = function () {
+                $("#CreateModalLabel").text("สร้างระบบ API");
+                $("#CreateModal").modal("show");
+                $("#InsMSystem_Id").val('');
+                $("#InsMSystem_SystemName").val('');
+                $("#InsMSystem_StartDate").val('');
+                $("#InsMSystem_EndDate").val('');
+                $("#InsMSystem_OwnerSystemCode").val('').trigger('change');
+                $("#InsMSystem_FlagActive").prop("checked", false); // หรือ true ถ้าต้องการ default
+            };
+
+            // Edit
+            $(".editbtn").click(function () {
+                var id = $(this).data("id");
+                var systemName = $(this).data("systemname");
+                var flagActive = $(this).data("flagactive");
+                var ownerSystemCode = $(this).data("ownersystemcode");
+                var startDate = $(this).data("startdate");
+                var endDate = $(this).data("enddate");
+                alert(flagActive);
+                $("#InsMSystem_Id").val(id);
+                $("#InsMSystem_SystemName").val(systemName);
+                $("#InsMSystem_StartDate").val(startDate);
+                $("#InsMSystem_EndDate").val(endDate);
+                $("#InsMSystem_OwnerSystemCode").val(ownerSystemCode).trigger('change');
+                $("#InsMSystem_FlagActive").prop("checked", flagActive === true || flagActive === "True" || flagActive === "true");
+                $("#CreateModalLabel").text("แก้ไขข้อมูล");
+                $("#CreateModal").modal("show");
+            });
+
+          // Save validation
+        $("#saveData").click(function (e) {
+            var ownerSystemCode = $("#InsMSystem_OwnerSystemCode").val();
+            var systemName = $("#InsMSystem_SystemName").val();
+            var startDate = $("#InsMSystem_StartDate").val();
+            var endDate = $("#InsMSystem_EndDate").val();
+
+            var messages = [];
+
+            if (!ownerSystemCode || ownerSystemCode.trim() === "") {
+                messages.push("กรุณาเลือกหน่วยงานเจ้าของ API");
+                $("#InsMSystem_OwnerSystemCode").focus();
+            }
+            if (!systemName || systemName.trim() === "") {
+                messages.push("กรุณาระบุชื่อระบบ");
+                $("#InsMSystem_SystemName").focus();
+            }
+            if (!endDate || endDate.trim() === "") {
+                messages.push("กรุณาระบุวันที่สิ้นสุด");
+                $("#InsMSystem_EndDate").focus();
+            }
+            if (startDate && endDate && endDate < startDate) {
+                messages.push("วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่มต้น");
+                $("#InsMSystem_EndDate").focus();
+            }
+
+            if (messages.length > 0) {
+                alert(messages.join('\n'));
+                e.preventDefault();
+                return false;
+            }
+
+            var confirmed = confirm("คุณต้องการบันทึกข้อมูลใช่หรือไม่?");
+            if (!confirmed) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+            // Delete
+            window.deleteSystem = function (id) {
+                if (!confirm('คุณต้องการลบระบบนี้ใช่หรือไม่?')) {
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("DeleteSystem", "SysMasterAPI")',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.success) {
+                            alert('ลบข้อมูลสำเร็จ');
+                            location.reload();
+                        } else {
+                            alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                        }
+                    },
+                    error: function () {
+                        alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+                    }
+                });
+            };
+
+            // Update Status
+            let pendingToggle = { id: null, flagActive: null, $checkbox: null };
+            let confirmUpdateStatus = false;
+
+            $(document).on('change', '.active-toggle', function () {
+                pendingToggle.id = $(this).data('id');
+                pendingToggle.flagActive = $(this).is(':checked');
+                pendingToggle.$checkbox = $(this);
+                confirmUpdateStatus = false;
+                $('#ConfirmUpdateStatusModal').modal('show');
+            });
+
+            $(document).on('click', '#btnConfirmUpdateStatus', function () {
+                confirmUpdateStatus = true;
+                $('#ConfirmUpdateStatusModal').modal('hide');
+                $.ajax({
+                    url: '/SysMasterAPI/UpdateStatus',
+                    type: 'POST',
+                    data: { id: pendingToggle.id, flagActive: pendingToggle.flagActive },
+                    success: function (res) {
+                        if (res.success) {
+                            // Update status text and color in the table row
+                            var $row = pendingToggle.$checkbox.closest('tr');
+                            var $statusSpan = $row.find('span.status-active, span.status-inactive');
+                            if (pendingToggle.flagActive) {
+                                $statusSpan
+                                    .removeClass('status-inactive')
+                                    .addClass('status-active')
+                                    .text('ใช้งาน');
+                            } else {
+                                $statusSpan
+                                    .removeClass('status-active')
+                                    .addClass('status-inactive')
+                                    .text('ไม่ใช้งาน');
+                            }
+                            $('#SuccessStatusModal').modal('show');
+                        } else {
+                            pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                            alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                        }
+                    },
+                    error: function () {
+                        pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                        alert('เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                    }
+                });
+            });
+
+            // สำคัญ! เฉพาะ revert toggle เมื่อ modal ถูกปิดโดย "ไม่กดยืนยัน"
+            $('#ConfirmUpdateStatusModal').on('hidden.bs.modal', function () {
+                if (!confirmUpdateStatus && pendingToggle.$checkbox) {
+                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                }
+                pendingToggle = { id: null, flagActive: null, $checkbox: null };
+                confirmUpdateStatus = false;
+            });
+
+            // Pagination last page
+            var btnLast = document.getElementById("btnLast");
+            if (btnLast) {
+                btnLast.addEventListener("click", function () {
+                    document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+                });
+            }
+        });
+    </script>
+}

@@ -8,7 +8,6 @@
     var EmployeeRole = ViewBag.EmployeeRole;
 }
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <style>
@@ -60,7 +59,9 @@
         $('#CreateEditModalLabel').text('แก้ไขข้อมูล API Outbound');
         $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
         $('#RegisterId').val(register.RegisterId || '');
-        $('#OrganizationCode').val(register.OrganizationCode || '').trigger('change');
+        // ตรวจสอบค่าก่อนเซ็ต
+        console.log('OrganizationCode:', register.OrganizationCode);
+        $('#OrganizationCode').val(register.OrganizationCode ? register.OrganizationCode.toString() : '').trigger('change');
         $('#FlagActive').val(register.FlagActive ? 'true' : 'false');
         $('#StartDate').val(register.StartDate ? register.StartDate.substring(0, 10) : '');
         $('#EndDate').val(register.EndDate ? register.EndDate.substring(0, 10) : '');
@@ -83,12 +84,14 @@
             url: '/RegisterAPI/DeleteRegister',
             type: 'POST',
             data: { id: id },
-            success: function (res) {
+             success: function (res) {
                 if (res.success) {
-                    $('#ConfirmDeleteModal').modal('hide');
-                    location.reload();
+                    // แสดง popup แจ้งเตือน
+                    showSuccessModal(res.message || 'บันทึกข้อมูลสำเร็จ');
                 } else {
-                    alert(res.message || 'เกิดข้อผิดพลาดในการลบข้อมูล');
+                    alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                    // Revert toggle if failed
+                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
                 }
             },
             error: function () {
@@ -143,8 +146,7 @@
             success: function (res) {
                 if (res.success) {
                     // แสดง popup แจ้งเตือน
-                    $('#successModalBody').text(res.message || 'บันทึกข้อมูลสำเร็จ');
-                    $('#successModal').modal('show');
+                    showSuccessModal(res.message || 'บันทึกข้อมูลสำเร็จ');
                 } else {
                     alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
                     // Revert toggle if failed
@@ -166,6 +168,18 @@
             pendingToggle = { id: null, flagActive: null, $checkbox: null };
         }
     });
+
+    function showSuccessModal(message) {
+        $('#successModalBody').text(message);
+        // ใช้ Bootstrap 5 Modal API
+        var modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('successModal'));
+        modal.show();
+        // รีเฟรชเมื่อปิด modal
+        document.getElementById('successModal').addEventListener('hidden.bs.modal', function handler() {
+            location.reload();
+            document.getElementById('successModal').removeEventListener('hidden.bs.modal', handler);
+        });
+    }
 </script>
 @using (Html.BeginForm("RegisterList", "RegisterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
 {
@@ -297,6 +311,9 @@
                                                
                                                     <button type="button" class="action-btn editbtn" onclick='GetEdit(@Html.Raw(json))' title="Edit">
                                                         <i class="fa fa-pen-to-square" style="color: #34A5EB; cursor: pointer;"></i>
+                                                    </button>
+                                                    <button type="button" class="action-btn deletebtn" onclick="OpenConfirmDeleteModal('@w.Id')" title="Delete">
+                                                        <i class="fa fa-trash" style="color: #e74c3c; cursor: pointer;"></i>
                                                     </button>
                                                
                                             </td>
@@ -473,9 +490,7 @@
                 <h5 class="modal-title" id="successModalLabel">แจ้งเตือน</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="successModalBody">
-                <!-- ข้อความแจ้งเตือน -->
-            </div>
+            <div class="modal-body" id="successModalBody"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ตกลง</button>
             </div>

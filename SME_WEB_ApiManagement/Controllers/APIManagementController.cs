@@ -155,5 +155,29 @@ namespace SME_WEB_ApiManagement.Controllers
             else
                 return Json(new { success = false, message = "ไม่พบผู้ใช้งานหรือเกิดข้อผิดพลาด" });
         }
+
+        [HttpPost]
+        public JsonResult UpdateStatusAgencyCompany(int id, bool flagActive)
+        {
+            try
+            {
+                var upsertModel = new MOrganizationModels
+                {
+                    OrganizationId = id,
+                    FlagActive = flagActive,
+                    UpdateBy = HttpContext.Session.GetString("EmployeeId"),
+
+                };
+                var result = SystemDAO.UpdateStatusOrg(upsertModel, API_Path_Main + API_Path_Sub, null);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+     
     }
 }

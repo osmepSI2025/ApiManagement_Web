@@ -183,8 +183,8 @@
                                     <td>@(w.CreateDate.HasValue? w.StartDate.Value.ToString("dd/MM/yyyy") : "-")- @(w.CreateDate.HasValue? w.EndDate.Value.ToString("dd/MM/yyyy") : "-")</td>
 
                                     
-                                    <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
-                                    <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy HH:mm:ss") : "-")</td>
+                                    <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
+                                    <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
                                     <td>
                                         <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
                                             @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")

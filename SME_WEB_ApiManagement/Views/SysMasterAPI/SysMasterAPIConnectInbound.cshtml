@@ -29,15 +29,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <!-- API-Key -->
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label>API-Key</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <input class="form-control" type="text" asp-for="TSystemAPI.ApiKey" value="@Model.MSystemInfo.ApiKey" />
-                                    </div>
-                                </div>
+                              
                                 <!-- URL-Path-Prod -->
                                 <div class="row mb-3">
                                     <div class="col-md-4">
@@ -116,8 +108,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Method</th>
-                                        <th style="width:65%;">Service Name</th>
-                                        <th>End Point</th>
+                                        <th style="width:20%;">Service Name</th>
+                                        <th style ="width:60%;">End Point</thstyle>
                                         <th>สถานะ</th>
                                         @if (EmployeeRole == "SUPERADMIN") 
                                         {
@@ -170,8 +162,9 @@
             @if (EmployeeRole == "SUPERADMIN")
             {
                 <div class="text-center m-t-10">
-                    <button type="button" class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData">Submit</button>
-                    <button class="btn btn_cancel">Cancel</button>
+                    <button class="btn btn_cancel">ยกเลิก</button>
+                    <button type="button" class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData">บันทึก</button>
+                  
                 </div>
             }else
             {
@@ -388,12 +381,7 @@
                 });
             });
 
-            // Popconfirm for saveData (main form)
-            document.getElementById('saveData').addEventListener('click', function () {
-                var modal = new bootstrap.Modal(document.getElementById('ConfirmSaveModal'));
-                modal.show();
-            });
-
+  
             document.getElementById('confirmSaveBtn').addEventListener('click', function () {
                 var form = document.getElementById('saveData').closest('form');
                 var input = form.querySelector('input[name="saveData"]');
@@ -410,11 +398,7 @@
                 }, 300);
             });
 
-            // Popconfirm for saveSubData (modal form)
-            document.getElementById('saveSubDataBtn').addEventListener('click', function () {
-                var modal = new bootstrap.Modal(document.getElementById('ConfirmSaveSubModal'));
-                modal.show();
-            });
+       
 
             document.getElementById('confirmSaveSubBtn').addEventListener('click', function () {
                 var form = this.closest('form');
@@ -453,5 +437,89 @@
                 .catch(() => alert('เกิดข้อผิดพลาดในการลบข้อมูล'));
             });
         });
+
+
+
+        function validateMainForm() {
+                   let isValid = true;
+                   let messages = [];
+                   const ownerSystem = document.querySelector('[name="TSystemAPI.OwnerSystemCode"]');
+                   const urlProd = document.querySelector('[name="TSystemAPI.ApiUrlProdInbound"]');
+                   const urlUat = document.querySelector('[name="TSystemAPI.ApiUrlUatInbound"]');
+                   const apiUser = document.querySelector('[name="TSystemAPI.ApiUser"]');
+                   const apiPassword = document.querySelector('[name="TSystemAPI.ApiPassword"]');
+
+                   if (!ownerSystem.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณาเลือก Owner System');
+                   }
+                   if (!urlProd.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณากรอก URL-Path-Prod');
+                   }
+                   if (!urlUat.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณากรอก URL-Path-UAT');
+                   }
+                   if (!apiUser.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณากรอก UserName');
+                   }
+                   if (!apiPassword.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณากรอก Password');
+                   }
+
+                   if (!isValid) {
+                       alert(messages.join('\n'));
+                       return false;
+                   }
+                   return true;
+               }
+
+               function validateApiModal() {
+                   let isValid = true;
+                   let messages = [];
+                   const apiMethod = document.getElementById('TSystemAPI_ApiMethod_Modal');
+                   const apiServiceName = document.getElementById('TSystemAPI_ApiServiceName_Modal');
+                   const apiServiceCode = document.getElementById('TSystemAPI_ApiServiceCode_Modal');
+                   const endPoint = document.getElementById('TSystemAPI_EndPoint_Modal');
+
+                   if (!apiMethod.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณาเลือก HTTP Method');
+                   }
+                   if (!apiServiceName.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณากรอก Service Name');
+                   }
+                   if (!apiServiceCode.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณากรอก Service Code');
+                   }
+                   if (!endPoint.value.trim()) {
+                       isValid = false;
+                       messages.push('กรุณากรอก End Point');
+                   }
+
+                   if (!isValid) {
+                       alert(messages.join('\n'));
+                       return false;
+                   }
+                   return true;
+               }
+
+               // เหลือแค่ 2 event listener นี้เท่านั้น!
+               document.getElementById('saveData').addEventListener('click', function () {
+                   if (!validateMainForm()) return;
+                   var modal = new bootstrap.Modal(document.getElementById('ConfirmSaveModal'));
+                   modal.show();
+               });
+
+               document.getElementById('saveSubDataBtn').addEventListener('click', function () {
+                   if (!validateApiModal()) return;
+                   var modal = new bootstrap.Modal(document.getElementById('ConfirmSaveSubModal'));
+                   modal.show();
+               });
     </script>
 }

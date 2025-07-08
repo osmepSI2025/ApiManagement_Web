@@ -94,7 +94,9 @@ namespace SME_WEB_ApiManagement.Controllers
                 result.TotalRowsList = xlist.TotalRowsList;
             }
             result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
-            result.vDdlOrg = Service_CenterDAO.GetDropdownOrganizationWithOutData(result.LRegis, API_Path_Main + API_Path_Sub, null);
+            //result.vDdlOrg = Service_CenterDAO.GetDropdownOrganizationWithOutData(result.LRegis, API_Path_Main + API_Path_Sub, null);
+            result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization( API_Path_Main + API_Path_Sub, null);
+
             ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
             ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
@@ -325,7 +327,15 @@ namespace SME_WEB_ApiManagement.Controllers
             // ส่งข้อความสำเร็จกลับไป
             return Json(new { success = true, message = "บันทึกข้อมูลสำเร็จ" });
         }
-
+        [HttpPost]
+        public JsonResult DeleteRegister(int id)
+        {
+            string result = SystemDAO.DeleteRegister(id.ToString(), API_Path_Main + API_Path_Sub, null);
+            if (!string.IsNullOrEmpty(result))
+                return Json(new { success = true, message = "ลบข้อมูลเรียบร้อยแล้ว" });
+            else
+                return Json(new { success = false, message = "ไม่พบระบบหรือเกิดข้อผิดพลาด" });
+        }
     }
 
 }

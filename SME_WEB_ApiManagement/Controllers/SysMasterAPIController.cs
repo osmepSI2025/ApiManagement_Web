@@ -101,8 +101,8 @@ namespace SME_WEB_ApiManagement.Controllers
                 else
                 {
                     MSystemModels model = new MSystemModels();
-                    model.FlagActive = true;
                     model.FlagDelete = "N";
+                    model.FlagSearch = "SEARCH";
                     model.CreateBy = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
 
@@ -115,11 +115,14 @@ namespace SME_WEB_ApiManagement.Controllers
 
                 var serviceCenter = new ServiceCenter(_configuration, _callAPIService);
                 result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
-               // result.vDdlOrg = serviceCenter.GetDdlDepartment(API_Path_Main + API_Path_Sub, "business-units").Result;
                 ViewBag.DDLDepartment = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
                 ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
                 ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+
+                MSystemModels t = new MSystemModels();
+                t.FlagActive = true;
+                result.InsMSystem = t;
                 return View(result);
             }
             catch (Exception ex)
@@ -218,6 +221,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     model.FlagDelete = "N";
                     model.EmployeeId = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+                    
                     result.MSystem = model;
                     result.LSystem = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
                     totalCount = SystemDAO.GetSystemBySearch(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();

@@ -854,5 +854,75 @@ namespace SME_WEB_ApiManagement.DAO
             }
         }
 
+        public static string? DeleteRegister(string id = null, string apipath = null, string TokenStr = null)
+        {
+
+
+            APIpath = apipath + "MRegister/" + id;
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+            httpWebRequest.ContentType = "application/json";
+            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+            httpWebRequest.Method = "DELETE";
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+
+                    var result = streamReader.ReadToEnd();
+                    string Llist = JsonConvert.DeserializeObject<string>(result);
+                    return Llist;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public static bool UpdateStatusOrg(MOrganizationModels model = null, string apipath = null, string TokenStr = null)
+        {
+
+
+            APIpath = apipath + "MOrganization/UpdateStatusOrg";
+
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(APIpath);
+            httpWebRequest.ContentType = "application/json";
+            //  httpWebRequest.Headers.Add("Authorization", "Bearer " + TokenStr);
+            httpWebRequest.Method = "POST";
+            bool Llist;
+            try
+            {
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    var Req = model;
+
+
+                    var json = JsonConvert.SerializeObject(Req, Formatting.Indented);
+
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+
+                    var result = streamReader.ReadToEnd();
+                    Llist = JsonConvert.DeserializeObject<bool>(result);
+                    return Llist;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
     }
 }

@@ -23,6 +23,8 @@
         padding: 0;
         font-size: 1.1rem;
     }
+
+   
 </style>
 
 <script>
@@ -152,6 +154,71 @@ $(document).on('click', '.editbtn', function () {
             dropdownParent: $('#CreateModal') // Ensures the dropdown appears correctly inside the modal
         });
     });
+
+    $(document).on('change', '.status-switch', function () {
+        var orgId = $(this).data('organizationid');
+        var newStatus = $(this).is(':checked');
+        $('#ConfirmUpdateStatusModal').modal('show');
+        $('#btnConfirmUpdateStatus').off('click').on('click', function () {
+            $.ajax({
+                url: '@Url.Action("UpdateStatusAgencyCompany", "APIManagement")',
+                type: 'POST',
+                data: { id: orgId, flagActive: newStatus },
+                success: function (res) {
+                    if (res.success) {
+                        Swal.fire('สำเร็จ', 'อัปเดตสถานะเรียบร้อย', 'success');
+                    } else {
+                        Swal.fire('ผิดพลาด', res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ', 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์', 'error');
+                }
+            });
+            $('#ConfirmUpdateStatusModal').modal('hide');
+        });
+    });
+
+    let pendingToggle = { id: null, flagActive: null, $checkbox: null };
+    let confirmUpdateStatus = false;
+
+    $(document).on('change', '.active-toggle', function () {
+        pendingToggle.id = $(this).data('id');
+        pendingToggle.flagActive = $(this).is(':checked');
+        pendingToggle.$checkbox = $(this);
+        confirmUpdateStatus = false;
+        $('#ConfirmUpdateStatusModal').modal('show');
+    });
+
+    $(document).on('click', '#btnConfirmUpdateStatus', function () {
+        confirmUpdateStatus = true;
+        $('#ConfirmUpdateStatusModal').modal('hide');
+        $.ajax({
+            url: '@Url.Action("UpdateStatusAgencyCompany", "APIManagement")',
+            type: 'POST',
+            data: { id: pendingToggle.id, flagActive: pendingToggle.flagActive },
+            success: function (res) {
+                if (res.success) {
+                    $('#SuccessStatusModal').modal('show');
+                } else {
+                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                    alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                }
+            },
+            error: function () {
+                pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการอัปเดตสถานะ', 'error');
+            }
+        });
+    });
+
+    $('#ConfirmUpdateStatusModal').on('hidden.bs.modal', function () {
+        if (!confirmUpdateStatus && pendingToggle.$checkbox) {
+            pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+        }
+        pendingToggle = { id: null, flagActive: null, $checkbox: null };
+        confirmUpdateStatus = false;
+    });
 </script>
 
 @using (Html.BeginForm("AgencyCompany", "APIManagement", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
@@ -210,6 +277,7 @@ $(document).on('click', '.editbtn', function () {
                                     <th>สถานะ</th>
                                     <th>วันที่สร้าง</th>
                                     <th>วันที่แก้ไขล่าสุด</th>
+                                    <th>Update Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -231,6 +299,15 @@ $(document).on('click', '.editbtn', function () {
                                             </td>
                                             <td class="align_text">
                                                 @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
+                                            </td>
+
+                                            <td class="text-center">
+                                                <label class="switch">
+                                                    <input type="checkbox" class="active-toggle"
+                                                           data-id="@w.OrganizationId"
+                                                           @(w.FlagActive ? "checked" : "") />
+                                                    <span class="slider"></span>
+                                                </label>
                                             </td>
                                             <td>
                                                 <a href="javascript:void(0);" class="editbtn"
@@ -333,5 +410,37 @@ $(document).on('click', '.editbtn', function () {
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="ConfirmUpdateStatusModal" tabindex="-1" aria-labelledby="ConfirmUpdateStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ConfirmUpdateStatusModalLabel">ยืนยันการเปลี่ยนสถานะ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    คุณต้องการเปลี่ยนสถานะการใช้งานใช่หรือไม่?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnConfirmUpdateStatus">ยืนยัน</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SuccessStatusModal" tabindex="-1" aria-labelledby="SuccessStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="SuccessStatusModalLabel">แจ้งเตือน</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    บันทึกสถานะเรียบร้อยแล้ว
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ตกลง</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }

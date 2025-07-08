@@ -25,6 +25,6 @@ namespace SME_WEB_ApiManagement.Models
 
         public DateTime? EndDate { get; set; }
         public string? OwnerSystemName { get; set; }
-
+        public string? FlagSearch { get; set; }
     }
 }
