@@ -4,7 +4,7 @@
     ViewBag.vDdlStatus = new SelectList(
          new[]
          {
-            new { Value = "", Text = "กรุณาระบุ" },      // Placeholder
+            new { Value = "", Text = "กรุณาเลือกสถานะ" },      // Placeholder
             new { Value = "true", Text = "ใช้งาน" },
             new { Value = "false", Text = "ปิดใช้งาน" }
          },
@@ -186,8 +186,8 @@
                                     <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
                                     <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
                                     <td>
-                                        <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
-                                            @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")
+                                        <span class="@(w.FlagActive.HasValue && w.FlagActive.Value ? "status-active" : "status-inactive")">
+                                            @(w.FlagActive.HasValue && w.FlagActive.Value ? "ใช้งาน" : "ไม่ใช้งาน")
                                         </span>
                                     </td>
                                 </tr>

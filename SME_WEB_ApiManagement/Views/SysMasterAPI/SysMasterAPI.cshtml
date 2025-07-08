@@ -32,8 +32,14 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">สถานะ</label>
-                    <select asp-for="MSystem.FlagActive" asp-items="vDdlStatus" class="form-control search-dropdown" id="Search_FlagActive">
+                 @*    <select asp-for="MSystem.FlagActive" asp-items="vDdlStatus" class="form-control search-dropdown" id="Search_FlagActive">
                         <option value="">--กรุณาเลือก--</option>
+                    </select> *@
+                    <select class="form-control" asp-for="MSystem.FlagActive" name="MSystem.FlagActive" >
+                        <option value="">กรุณาเลือกสถานะ</option>
+                        <option value="true">ใช้งาน</option>
+                        <option value="false">ปิดใช้งาน</option>
+
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -92,8 +98,8 @@
                                         @(w.EndDate.HasValue? w.EndDate.Value.ToString("dd-MM-yyyy") : "-")
                                     </td>
                                     <td>
-                                        <span class="@(w.FlagActive ? "status-active" : "status-inactive")">
-                                            @(w.FlagActive ? "ใช้งาน" : "ไม่ใช้งาน")
+                                        <span class="@(w.FlagActive.HasValue && w.FlagActive.Value ? "status-active" : "status-inactive")">
+                                            @(w.FlagActive.HasValue && w.FlagActive.Value ? "ใช้งาน" : "ไม่ใช้งาน")
                                         </span>
                                     </td>
                                     <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
@@ -102,7 +108,7 @@
                                         <label class="switch">
                                             <input type="checkbox" class="active-toggle"
                                                    data-id="@w.Id"
-                                                   @(w.FlagActive ? "checked" : "") />
+                                                   @(w.FlagActive.HasValue && w.FlagActive.Value ? "checked" : "") />
                                             <span class="slider"></span>
                                         </label>
                                     </td>

@@ -7,7 +7,7 @@ namespace SME_WEB_ApiManagement.Models
         public int Id { get; set; }
         public string? SystemCode { get; set; }
         public string? SystemName { get; set; }
-        public bool FlagActive { get; set; }
+        public bool? FlagActive { get; set; } = null;
         public string? FlagDelete { get; set; }
         public string? CreateBy { get; set; }
         public DateTime? CreateDate { get; set; }

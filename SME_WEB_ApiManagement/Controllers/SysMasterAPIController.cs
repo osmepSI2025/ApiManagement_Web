@@ -61,7 +61,8 @@ namespace SME_WEB_ApiManagement.Controllers
             ViewSystemApiModels result = new ViewSystemApiModels();
             try
             {
-                if (!string.IsNullOrEmpty(searchData))
+                if (!string.IsNullOrEmpty(searchData)|| !string.IsNullOrEmpty(previous) || !string.IsNullOrEmpty(first)
+                    || !string.IsNullOrEmpty(next) || !string.IsNullOrEmpty(last))
                 {
                     result.LSystem = SystemDAO.GetSystemBySearchMaster(vm.MSystem, API_Path_Main + API_Path_Sub, null);
                     if (result.LSystem != null)
@@ -103,6 +104,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     MSystemModels model = new MSystemModels();
                     model.FlagDelete = "N";
                     model.FlagSearch = "SEARCH";
+                    model.FlagActive = null;
                     model.CreateBy = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
 
@@ -120,9 +122,9 @@ namespace SME_WEB_ApiManagement.Controllers
                 ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
                 ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
-                MSystemModels t = new MSystemModels();
-                t.FlagActive = true;
-                result.InsMSystem = t;
+                //MSystemModels t = new MSystemModels();
+                //t.FlagActive = true;
+                //result.InsMSystem = t;
                 return View(result);
             }
             catch (Exception ex)
@@ -217,8 +219,9 @@ namespace SME_WEB_ApiManagement.Controllers
                 {
 
                     MSystemModels model = new MSystemModels();
-                    model.FlagActive = true;
+                    model.FlagActive = null;
                     model.FlagDelete = "N";
+                    
                     model.EmployeeId = HttpContext.Session.GetString("EmployeeId");
                     model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
                     
