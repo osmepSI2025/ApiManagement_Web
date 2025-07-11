@@ -40,5 +40,7 @@ namespace SME_WEB_ApiManagement.Models
         public string? ApiUrlUatOundbound { get; set; }
         public string? ApiUrlProdOundbound { get; set; }
         public string? ApiServiceCode { get; set; }
+
+        public string? Note { get; set; }
     }
 }

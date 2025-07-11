@@ -192,6 +192,7 @@ namespace SME_WEB_ApiManagement.Controllers
             #endregion
             // 
             ViewBag.UserRole= HttpContext.Session.GetString("EmployeeRole");
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             try
             {
                 if (!string.IsNullOrEmpty(saveData))
@@ -216,6 +217,7 @@ namespace SME_WEB_ApiManagement.Controllers
                                     StartDate = item.StartDate,
                                     EndDate = item.EndDate,
                                     SystemApiMappingId = item.SystemApiMappingId,
+                                    Note = vm.MRegister.Note,
                                 });
                             }
                             um.LPerMapApi = lsysApi;
@@ -239,25 +241,32 @@ namespace SME_WEB_ApiManagement.Controllers
                     TApiPermisionMappingModels mo = new TApiPermisionMappingModels();
                     MRegisterModels og = new MRegisterModels();
 
+                    ViewRegisterApiModels searchCode = new ViewRegisterApiModels();
 
                     mo.OrganizationCode = OrgCode;
+                    og.OrganizationCode = OrgCode;
+                    og.FlagDelete = "N";
+                    searchCode.MRegister = og;
+                    var xlist = SystemDAO.GetRegister(searchCode, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
 
-                    result.LApi = SystemDAO.GetTApiMappingBySearch(mo, API_Path_Main + API_Path_Sub, null);
-
-                    if (result.LApi != null)
+                    if (xlist.LRegis != null&& xlist.LRegis.Count>0)
                     {
                         og.OrganizationCode = OrgCode;
-                        og.StartDate = result.LApi[0].StartDate;
-                        og.EndDate = result.LApi[0].EndDate;
+                        og.StartDate = xlist.LRegis[0].StartDate;
+                        og.EndDate = xlist.LRegis[0].EndDate;
+                        og.Note = xlist.LRegis[0].Note;
                         result.MRegister = og;
                     }
-                    else 
+                    else
                     {
                         og.OrganizationCode = OrgCode;
                         og.StartDate = null;
                         og.EndDate = null;
                         result.MRegister = og;
                     }
+                    result.LApi = SystemDAO.GetTApiMappingBySearch(mo, API_Path_Main + API_Path_Sub, null);
+
+                 
 
 
                 }

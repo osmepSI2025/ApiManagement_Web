@@ -3,6 +3,7 @@
     ViewData["Title"] = "Register API";
     var vDdlStatus = ViewBag.vDdlStatus;
     var vDdlOrg = ViewBag.vDdlOrg;
+    var EmployeeId = ViewBag.EmployeeId;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     var isSuperAdmin = (ViewBag.UserRole as string) == "SUPERADMIN";
 }
@@ -30,6 +31,8 @@
                 </div>
                 <div class="col-md-6">
                     <input type="hidden" asp-for="MRegister.OrganizationCode" value="@Model.MRegister.OrganizationCode" />
+                    <input type="hidden" asp-for="MRegister.CreateBy" value="@EmployeeId" />
+                    <input type="hidden" asp-for="MRegister.UpdateBy" value="@EmployeeId" />
                     <select asp-for="MRegister.OrganizationCode" asp-items="vDdlOrg" class="form-control" disabled>
                         <option value="">-- กรุณาเลือก --</option>
                     </select>
@@ -106,7 +109,8 @@
                     <label class="col-form-label">หมายเหตุ :</label>
                 </div>
                 <div class="col-md-6">
-                    <textarea id="w3review" name="w3review" rows="4" class="form-control" placeholder="Enter your text here..."></textarea>
+                    <textarea class="form-control" rows="4" asp-for="MRegister.Note" placeholder="Enter your text here..."></textarea>
+                    <span asp-validation-for="MRegister.Note" class="text-danger"></span>
                 </div>
             </div>
             @if (ViewBag.UserRole == "SUPERADMIN")
