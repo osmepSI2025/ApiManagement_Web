@@ -24,6 +24,23 @@
             <div class="wrap-content">
                 <div class="card-title">API Outbound</div>
                 <div class="content_body">
+                    @if (ViewBag.ModelStateErrors != null)
+                    {
+                        <div class="alert alert-danger">
+                            <ul>
+                            @foreach (var error in ViewBag.ModelStateErrors)
+                            {
+                                <li>
+                                    <strong>@error.Field:</strong>
+                                    @foreach (var msg in error.Errors)
+                                    {
+                                        <span>@msg</span>
+                                    }
+                                </li>
+                            }
+                            </ul>
+                        </div>
+                    }
                     <div class="row">
                         <div class="col-md-6">
                             <div><label>ผู้ระบบ</label></div>
@@ -332,6 +349,27 @@
     </div>
 </div>
 
+<!-- Modal Popup Error -->
+<div class="modal fade" id="popupErrorModal" tabindex="-1" aria-labelledby="popupErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupErrorModalLabel">แจ้งเตือน</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="popupErrorModalBody">
+                @if (ViewBag.PopupError != null)
+                {
+                    @Html.Raw(ViewBag.PopupError)
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ตกลง</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -466,7 +504,7 @@
             });
         }
 
-        // --- Miscellaneous ---
+        // --- Popup Error Logic ---
         $(document).ready(function () {
             initSelect2Modal();
 
@@ -481,6 +519,14 @@
                 btnLast.addEventListener("click", function () {
                     document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
                 });
+            }
+
+            // Show popup error if set
+            var popupError = '@(ViewBag.PopupError ?? "")';
+            if (popupError && popupError.length > 0) {
+                $('#popupErrorModalBody').html(popupError);
+                var modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('popupErrorModal'));
+                modal.show();
             }
         });
     </script>

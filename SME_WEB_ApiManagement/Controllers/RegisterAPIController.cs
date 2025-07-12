@@ -201,6 +201,7 @@ namespace SME_WEB_ApiManagement.Controllers
                                     EndDate = item.EndDate,
                                     SystemApiMappingId = item.SystemApiMappingId,
                                     Note = vm.MRegister.Note,
+                                    RegisterId = vm.MRegister.Id,
                                 });
                             }
                             um.LPerMapApi = lsysApi;
@@ -239,7 +240,7 @@ namespace SME_WEB_ApiManagement.Controllers
                         og.OrganizationCode = OrgCode;
                         og.StartDate = null;
                         og.EndDate = null;
-                        og.Id =0;
+                        og.Id = 0;
                         result.MRegister = og;
                     }
                     result.LApi = SystemDAO.GetTApiMappingBySearch(mo, API_Path_Main + API_Path_Sub, null);
@@ -262,8 +263,25 @@ namespace SME_WEB_ApiManagement.Controllers
         [HttpPost]
         public IActionResult Add(MRegisterModels model)
         {
-            // model.Id will be set from the form's hidden input 'Id'
-            if (ModelState.IsValid)
+            var viewModel = new ViewRegisterApiModels();
+
+            ViewRegisterApiModels searchCode = new ViewRegisterApiModels();
+            TApiPermisionMappingModels mo = new TApiPermisionMappingModels();
+            MRegisterModels og = new MRegisterModels();
+
+            og.FlagDelete = "N";
+            og.OrganizationCode = model.OrganizationCode;
+            searchCode.MRegister = og;
+            var xlist = SystemDAO.GetRegister(searchCode, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+
+            if (xlist.LRegis.Count > 0)
+            {
+              // ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้ ข้อมูลซ้ำ");
+                ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้ ข้อมูลซ้ำ";
+                ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+                ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            }
+            else
             {
                 var upsertModel = new UpSertRegisterApiModels
                 {
@@ -272,7 +290,6 @@ namespace SME_WEB_ApiManagement.Controllers
                     LPerMapApi = new List<TApiPermisionMappingModels>()
                 };
 
-                // model.Id will be > 0 for edit, 0 for new
                 var result = SystemDAO.UpsertRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
 
                 if (result > 0)
@@ -281,10 +298,22 @@ namespace SME_WEB_ApiManagement.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้");
+                  //  ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้");
+                    ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้";
                 }
             }
-            return View("RegisterList");
+
+            viewModel.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
+            viewModel.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
+            ViewBag.vDdlStatus = new SelectList(viewModel.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+            ViewBag.vDdlOrg = new SelectList(viewModel.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
+
+            var listResult = SystemDAO.GetRegister(new ViewRegisterApiModels(), API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+            viewModel.LRegis = listResult.LRegis;
+            viewModel.PageModel = Service_CenterDAO.LoadPagingViewModel(listResult.TotalRowsList ?? 0, currentPageNumber, PageSize);
+            viewModel.TotalRowsList = listResult.TotalRowsList;
+      
+            return View("RegisterList", viewModel);
         }
         [HttpPost]
         public JsonResult UpdateStatus(int id, bool flagActive)

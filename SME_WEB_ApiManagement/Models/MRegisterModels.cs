@@ -1,9 +1,14 @@
-﻿namespace SME_WEB_ApiManagement.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SME_WEB_ApiManagement.Models
 {
     public class MRegisterModels
     {
         public int Id { get; set; }
-        public string? OrganizationCode { get; set; }  
+
+        [Required(ErrorMessage = "กรุณาระบุรหัสหน่วยงาน")]
+        public string OrganizationCode { get; set; }
+
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool? FlagActive { get; set; }

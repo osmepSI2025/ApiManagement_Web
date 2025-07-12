@@ -42,5 +42,7 @@ namespace SME_WEB_ApiManagement.Models
         public string? ApiServiceCode { get; set; }
 
         public string? Note { get; set; }
+
+        public int? RegisterId { get; set; }
     }
 }

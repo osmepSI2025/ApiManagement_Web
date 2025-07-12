@@ -25,6 +25,23 @@
     <div class="container py-4">
         <div class="section-title">Register API</div>
         <div class="form-section">
+            @if (ViewBag.ModelStateErrors != null)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                    @foreach (var error in ViewBag.ModelStateErrors)
+                    {
+                        <li>
+                            <strong>@error.Field:</strong>
+                            @foreach (var msg in error.Errors)
+                            {
+                                <span>@msg</span>
+                            }
+                        </li>
+                    }
+                    </ul>
+                </div>
+            }
             <div class="row mb-3">
                 <div class="col-md-3 text-end">
                     <label class="col-form-label">หน่วยงานที่ขอใช้ :</label>
