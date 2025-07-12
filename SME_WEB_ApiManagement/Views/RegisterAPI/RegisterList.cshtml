@@ -7,9 +7,7 @@
     var EmployeeId = ViewBag.EmployeeId;
     var EmployeeRole = ViewBag.EmployeeRole;
 }
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <style>
     .modal .select2-container {
         z-index: 1055 !important;
@@ -19,168 +17,6 @@
         z-index: 1060 !important;
     }
 </style>
-<script>
-    function initSelect2Modal() {
-        $('#OrganizationCode').select2({
-            width: '100%',
-            placeholder: "--กรุณาเลือก--",
-            allowClear: true,
-            dropdownParent: $('#CreateEditModal')
-        });
-    }
-
-    $(document).ready(function () {
-        initSelect2Modal();
-    });
-
-    // Fix: Select2 inside Bootstrap modal - allow modal to close on cancel
-    $(document).on('select2:open', () => {
-        document.querySelectorAll('.select2-search__field').forEach((el) => {
-            el.focus();
-        });
-    });
-
-    // เปิด modal สำหรับสร้าง
-    function GetCreate() {
-        $('#CreateEditModalLabel').text('สร้างข้อมูล API Outbound');
-        $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
-        $('#RegisterId').val('');
-        $('#OrganizationCode').val('').trigger('change');
-        $('#FlagActive').val('true');
-        $('#StartDate').val('');
-        $('#EndDate').val('');
-        $('#CreateBy').val('');
-        $('#UpdateBy').val('');
-        $('#CreateEditModal').modal('show');
-    }
-
-    // เปิด modal สำหรับแก้ไข
-    function GetEdit(register) {
-        $('#CreateEditModalLabel').text('แก้ไขข้อมูล API Outbound');
-        $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
-        $('#RegisterId').val(register.RegisterId || '');
-        // ตรวจสอบค่าก่อนเซ็ต
-        console.log('OrganizationCode:', register.OrganizationCode);
-        $('#OrganizationCode').val(register.OrganizationCode ? register.OrganizationCode.toString() : '').trigger('change');
-        $('#FlagActive').val(register.FlagActive ? 'true' : 'false');
-        $('#StartDate').val(register.StartDate ? register.StartDate.substring(0, 10) : '');
-        $('#EndDate').val(register.EndDate ? register.EndDate.substring(0, 10) : '');
-        $('#CreateBy').val(register.CreateBy || '');
-        $('#UpdateBy').val(register.UpdateBy || '');
-        $('#CreateEditModal').modal('show');
-    }
-
-    // เปิด modal สำหรับยืนยันการลบ
-    function OpenConfirmDeleteModal(registerId) {
-        $('#TArrivalDetaiModels_Id').val(registerId);
-        $('#ConfirmDeleteModal').modal('show');
-    }
-
-    // ฟังก์ชัน submit ลบ
-    function submitDelete() {
-        var id = $('#TArrivalDetaiModels_Id').val();
-        if (!id) return;
-        $.ajax({
-            url: '/RegisterAPI/DeleteRegister',
-            type: 'POST',
-            data: { id: id },
-             success: function (res) {
-                if (res.success) {
-                    // แสดง popup แจ้งเตือน
-                    showSuccessModal(res.message || 'บันทึกข้อมูลสำเร็จ');
-                } else {
-                    alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
-                    // Revert toggle if failed
-                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
-                }
-            },
-            error: function () {
-                alert('เกิดข้อผิดพลาดในการลบข้อมูล');
-            }
-        });
-    }
-
-    // Pagination last page button
-    document.addEventListener("DOMContentLoaded", function () {
-        var btnLast = document.getElementById("btnLast");
-        if (btnLast) {
-            btnLast.addEventListener("click", function (e) {
-                document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
-            });
-        }
-    });
-
-    // Intercept submit button in Create/Edit modal
-    $(document).on('click', '#modalSubmitBtn', function (e) {
-        e.preventDefault();
-        $('#ConfirmSaveModal').modal('show');
-    });
-
-    // Confirm save
-    $(document).on('click', '#btnConfirmSave', function () {
-        $('#ConfirmSaveModal').modal('hide');
-        setTimeout(function () {
-            $('#createEditRegisterForm')[0].submit();
-        }, 200); // รอ modal ปิดก่อน submit
-    });
-
-    let pendingToggle = { id: null, flagActive: null, $checkbox: null };
-
-    $(document).on('change', '.active-toggle', function () {
-        // Store the toggle state and element
-        pendingToggle.id = $(this).data('id');
-        pendingToggle.flagActive = $(this).is(':checked');
-        pendingToggle.$checkbox = $(this);
-
-        // Show confirm modal
-        $('#ConfirmUpdateStatusModal').modal('show');
-    });
-
-    // On confirm, send AJAX and close modal
-    $(document).on('click', '#btnConfirmUpdateStatus', function () {
-        $('#ConfirmUpdateStatusModal').modal('hide');
-        $.ajax({
-            url: '/RegisterAPI/UpdateStatus',
-            type: 'POST',
-            data: { id: pendingToggle.id, flagActive: pendingToggle.flagActive },
-            success: function (res) {
-                if (res.success) {
-                    // แสดง popup แจ้งเตือน
-                    showSuccessModal(res.message || 'บันทึกข้อมูลสำเร็จ');
-                } else {
-                    alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
-                    // Revert toggle if failed
-                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
-                }
-            },
-            error: function () {
-                alert('เกิดข้อผิดพลาดในการอัปเดตสถานะ');
-                pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
-            }
-        });
-    });
-
-    // If cancel, revert the toggle
-    $('#ConfirmUpdateStatusModal').on('hidden.bs.modal', function () {
-        if (pendingToggle.$checkbox) {
-            // If not confirmed, revert the toggle to previous state
-            pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
-            pendingToggle = { id: null, flagActive: null, $checkbox: null };
-        }
-    });
-
-    function showSuccessModal(message) {
-        $('#successModalBody').text(message);
-        // ใช้ Bootstrap 5 Modal API
-        var modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('successModal'));
-        modal.show();
-        // รีเฟรชเมื่อปิด modal
-        document.getElementById('successModal').addEventListener('hidden.bs.modal', function handler() {
-            location.reload();
-            document.getElementById('successModal').removeEventListener('hidden.bs.modal', handler);
-        });
-    }
-</script>
 @using (Html.BeginForm("RegisterList", "RegisterAPI", FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
 {
     <div class="main-content">
@@ -248,7 +84,6 @@
                                         <th scope="col">Update Status</th>
                                         <th scope="col"> </th>
                                     }
-                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -297,26 +132,24 @@
                                             <td class="align_text" style="width:auto">
                                                 @(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")
                                             </td>
-                                             @if (EmployeeRole == "SUPERADMIN")
-                                                {
-                                                     <td class="text-center">
-                                                         <label class="switch">
-                                                             <input type="checkbox" class="active-toggle"
-                                                                    data-id="@w.Id"
-                                                                    @(w.FlagActive == true ? "checked" : "") />
-                                                             <span class="slider"></span>
-                                                         </label>
-                                                     </td>
-                                            <td style="text-align:center;">
-                                               
+                                            @if (EmployeeRole == "SUPERADMIN")
+                                            {
+                                                <td class="text-center">
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="active-toggle"
+                                                               data-id="@w.Id"
+                                                               @(w.FlagActive == true ? "checked" : "") />
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                </td>
+                                                <td style="text-align:center;">
                                                     <button type="button" class="action-btn editbtn" onclick='GetEdit(@Html.Raw(json))' title="Edit">
                                                         <i class="fa fa-pen-to-square" style="color: #34A5EB; cursor: pointer;"></i>
                                                     </button>
                                                     <button type="button" class="action-btn deletebtn" onclick="OpenConfirmDeleteModal('@w.Id')" title="Delete">
                                                         <i class="fa fa-trash" style="color: #e74c3c; cursor: pointer;"></i>
                                                     </button>
-                                               
-                                            </td>
+                                                </td>
                                             }
                                         </tr>
                                         index++;
@@ -401,7 +234,8 @@
                 </button>
             </div>
             <form id="createEditRegisterForm" method="post" action="/RegisterAPI/Add">
-                <input type="hidden" name="RegisterId" id="RegisterId" />
+                <!-- Change name to 'Id' for correct model binding -->
+                <input type="hidden" name="Id" id="Id" />
                 <input type="hidden" name="CreateBy" id="CreateBy" value="@EmployeeId" />
                 <input type="hidden" name="UpdateBy" id="UpdateBy" value="@EmployeeId" />
                 <div class="modal-body">
@@ -497,3 +331,157 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        // --- Select2 Initialization ---
+        function initSelect2Modal() {
+            $('#OrganizationCode').select2({
+                width: '100%',
+                placeholder: "--กรุณาเลือก--",
+                allowClear: true,   
+                dropdownParent: $('#CreateEditModal')
+            });
+        }
+
+        // --- Modal & Form Logic ---
+        window.GetCreate = function () {
+            $('#CreateEditModalLabel').text('สร้างข้อมูล API Outbound');
+            $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
+            $('#Id').val('');
+            $('#OrganizationCode').val('').trigger('change');
+            $('#FlagActive').val('true');
+            $('#StartDate').val('');
+            $('#EndDate').val('');
+            $('#CreateBy').val('');
+            $('#UpdateBy').val('');
+            $('#CreateEditModal').modal('show');
+        };
+
+        window.GetEdit = function (register) {
+            $('#CreateEditModalLabel').text('แก้ไขข้อมูล API Outbound');
+            $('#createEditRegisterForm').attr('action', '/RegisterAPI/Add');
+            // Set both RegisterId and Id for compatibility
+            $('#RegisterId').val(register.RegisterId || '');
+            $('#Id').val(register.RegisterId || '');
+            $('#OrganizationCode').val(register.OrganizationCode ? register.OrganizationCode.toString() : '').trigger('change');
+            $('#FlagActive').val(register.FlagActive ? 'true' : 'false');
+            $('#StartDate').val(register.StartDate ? register.StartDate.substring(0, 10) : '');
+            $('#EndDate').val(register.EndDate ? register.EndDate.substring(0, 10) : '');
+            $('#CreateBy').val(register.CreateBy || '');
+            $('#UpdateBy').val(register.UpdateBy || '');
+            $('#CreateEditModal').modal('show');
+        };
+
+        window.OpenConfirmDeleteModal = function (registerId) {
+            $('#TArrivalDetaiModels_Id').val(registerId);
+            $('#ConfirmDeleteModal').modal('show');
+        };
+
+        window.submitDelete = function () {
+            var id = $('#TArrivalDetaiModels_Id').val();
+            if (!id) return;
+            $.ajax({
+                url: '/RegisterAPI/DeleteRegister',
+                type: 'POST',
+                data: { id: id },
+                success: function (res) {
+                    if (res.success) {
+                        showSuccessModal(res.message || 'บันทึกข้อมูลสำเร็จ');
+                    } else {
+                        alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                    }
+                },
+                error: function () {
+                    alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+                }
+            });
+        };
+
+        // --- Status Toggle Logic ---
+        let pendingToggle = { id: null, flagActive: null, $checkbox: null };
+        let confirmUpdateStatus = false;
+
+        $(document).on('change', '.active-toggle', function () {
+            pendingToggle.id = $(this).data('id');
+            pendingToggle.flagActive = $(this).is(':checked');
+            pendingToggle.$checkbox = $(this);
+            confirmUpdateStatus = false;
+            $('#ConfirmUpdateStatusModal').modal('show');
+        });
+
+        $(document).on('click', '#btnConfirmUpdateStatus', function () {
+            confirmUpdateStatus = true;
+            $('#ConfirmUpdateStatusModal').modal('hide');
+            $.ajax({
+                url: '/RegisterAPI/UpdateStatus',
+                type: 'POST',
+                data: { id: pendingToggle.id, flagActive: pendingToggle.flagActive },
+                success: function (res) {
+                    if (res.success) {
+                        showSuccessModal(res.message || 'บันทึกข้อมูลสำเร็จ');
+                    } else {
+                        pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                        alert(res.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                    }
+                },
+                error: function () {
+                    pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+                    alert('เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+                }
+            });
+        });
+
+        $('#ConfirmUpdateStatusModal').on('hidden.bs.modal', function () {
+            if (!confirmUpdateStatus && pendingToggle.$checkbox) {
+                pendingToggle.$checkbox.prop('checked', !pendingToggle.flagActive);
+            }
+            pendingToggle = { id: null, flagActive: null, $checkbox: null };
+            confirmUpdateStatus = false;
+        });
+
+        // --- Save Modal Logic ---
+        $(document).on('click', '#modalSubmitBtn', function (e) {
+            e.preventDefault();
+            $('#ConfirmSaveModal').modal('show');
+        });
+
+        $(document).on('click', '#btnConfirmSave', function () {
+            $('#ConfirmSaveModal').modal('hide');
+            setTimeout(function () {
+                $('#createEditRegisterForm')[0].submit();
+            }, 200);
+        });
+
+        // --- Success Modal Logic ---
+        function showSuccessModal(message) {
+            $('#successModalBody').text(message);
+            var modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('successModal'));
+            modal.show();
+            document.getElementById('successModal').addEventListener('hidden.bs.modal', function handler() {
+                location.reload();
+                document.getElementById('successModal').removeEventListener('hidden.bs.modal', handler);
+            });
+        }
+
+        // --- Miscellaneous ---
+        $(document).ready(function () {
+            initSelect2Modal();
+
+            $(document).on('select2:open', () => {
+                document.querySelectorAll('.select2-search__field').forEach((el) => {
+                    el.focus();
+                });
+            });
+
+            var btnLast = document.getElementById("btnLast");
+            if (btnLast) {
+                btnLast.addEventListener("click", function () {
+                    document.getElementById("hidcurrentpage").value = document.getElementById("hidtotalpage").value;
+                });
+            }
+        });
+    </script>
+}

@@ -30,11 +30,8 @@ namespace SME_WEB_ApiManagement.Controllers
             PageSizMedium = _configuration.GetValue<Int32>("PageSizMedium");
             currentPageNumber = 1;
             _webHostEnvironment = webHostEnvironment;
-
-
         }
         public IActionResult RegisterList(ViewRegisterApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
-
             string searchDate = null, string clearSearcData = null)
         {
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
@@ -67,19 +64,17 @@ namespace SME_WEB_ApiManagement.Controllers
                 }
                 else
                 {
-                    result.PageModel = Service_CenterDAO.LoadPagingViewModel( 0, currentPageNumber, PageSize);
-
+                    result.PageModel = Service_CenterDAO.LoadPagingViewModel(0, currentPageNumber, PageSize);
                 }
                 result.TotalRowsList = xlist.TotalRowsList;
             }
-            else if (!string.IsNullOrEmpty(clearSearcData)) 
+            else if (!string.IsNullOrEmpty(clearSearcData))
             {
                 return Redirect("RegisterList");
             }
             else
             {
-               
-                var xlist    = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
+                var xlist = SystemDAO.GetRegister(vm, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
 
                 result.LRegis = xlist.LRegis;
                 if (result.LRegis != null)
@@ -89,13 +84,11 @@ namespace SME_WEB_ApiManagement.Controllers
                 else
                 {
                     result.PageModel = Service_CenterDAO.LoadPagingViewModel(0, currentPageNumber, PageSize);
-
                 }
                 result.TotalRowsList = xlist.TotalRowsList;
             }
             result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
-            //result.vDdlOrg = Service_CenterDAO.GetDropdownOrganizationWithOutData(result.LRegis, API_Path_Main + API_Path_Sub, null);
-            result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization( API_Path_Main + API_Path_Sub, null);
+            result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
 
             ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
             ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
@@ -103,7 +96,6 @@ namespace SME_WEB_ApiManagement.Controllers
             return View(result);
         }
         public IActionResult RegisterAPI(ViewRegisterApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
-
             string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
             #region panging
@@ -122,7 +114,6 @@ namespace SME_WEB_ApiManagement.Controllers
             int totalCount = 0;
             PageSize = PageSizeDummy;
             #endregion
-            // 
             try
             {
                 if (!string.IsNullOrEmpty(saveData))
@@ -133,7 +124,6 @@ namespace SME_WEB_ApiManagement.Controllers
                         um.MRegister = vm.MRegister;
                         um.LSystem = vm.LSystem;
 
-                        // insert/update TB register
                         var Upsert = SystemDAO.UpsertRegister(um, API_Path_Main + API_Path_Sub, null);
                     }
                 }
@@ -154,11 +144,9 @@ namespace SME_WEB_ApiManagement.Controllers
                 result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
                 result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
 
-
                 ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
                 ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
-                //
                 #endregion dropdown
                 return View(result);
             }
@@ -167,15 +155,11 @@ namespace SME_WEB_ApiManagement.Controllers
                 return View(result);
             }
         }
-
-
         public IActionResult RegisterAPIDetail(ViewRegisterApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
-
-     string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string OrgCode = null)
+            string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string OrgCode = null)
         {
-         
             #region panging
-         int curpage = 0;
+            int curpage = 0;
             int totalpage = 0;
             ViewRegisterApiModels result = new ViewRegisterApiModels();
 
@@ -190,8 +174,7 @@ namespace SME_WEB_ApiManagement.Controllers
             int totalCount = 0;
             PageSize = PageSizeDummy;
             #endregion
-            // 
-            ViewBag.UserRole= HttpContext.Session.GetString("EmployeeRole");
+            ViewBag.UserRole = HttpContext.Session.GetString("EmployeeRole");
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             try
             {
@@ -221,23 +204,16 @@ namespace SME_WEB_ApiManagement.Controllers
                                 });
                             }
                             um.LPerMapApi = lsysApi;
-
                         }
-                        // insert/update TB register
                         var Upsert = SystemDAO.UpsertRegister(um, API_Path_Main + API_Path_Sub, null);
                         if (Upsert != 0)
                         {
                             return RedirectToAction("RegisterList");
                         }
-
                     }
-
-
-
                 }
                 else if (!string.IsNullOrEmpty(OrgCode))
                 {
-                    // get data by orgcode
                     TApiPermisionMappingModels mo = new TApiPermisionMappingModels();
                     MRegisterModels og = new MRegisterModels();
 
@@ -249,12 +225,13 @@ namespace SME_WEB_ApiManagement.Controllers
                     searchCode.MRegister = og;
                     var xlist = SystemDAO.GetRegister(searchCode, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
 
-                    if (xlist.LRegis != null&& xlist.LRegis.Count>0)
+                    if (xlist.LRegis != null && xlist.LRegis.Count > 0)
                     {
                         og.OrganizationCode = OrgCode;
                         og.StartDate = xlist.LRegis[0].StartDate;
                         og.EndDate = xlist.LRegis[0].EndDate;
                         og.Note = xlist.LRegis[0].Note;
+                        og.Id = xlist.LRegis[0].Id;
                         result.MRegister = og;
                     }
                     else
@@ -262,27 +239,18 @@ namespace SME_WEB_ApiManagement.Controllers
                         og.OrganizationCode = OrgCode;
                         og.StartDate = null;
                         og.EndDate = null;
+                        og.Id =0;
                         result.MRegister = og;
                     }
                     result.LApi = SystemDAO.GetTApiMappingBySearch(mo, API_Path_Main + API_Path_Sub, null);
-
-                 
-
-
                 }
-
-
                 #region dropdown 
-                //  result.LSystem = SystemDAO.GetSystem(API_Path_Main + API_Path_Sub, null);
-
                 result.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
                 result.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
-
 
                 ViewBag.vDdlStatus = new SelectList(result.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
                 ViewBag.vDdlOrg = new SelectList(result.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
 
-                //
                 #endregion dropdown
                 return View(result);
             }
@@ -290,15 +258,13 @@ namespace SME_WEB_ApiManagement.Controllers
             {
                 return View(result);
             }
-
         }
-
         [HttpPost]
         public IActionResult Add(MRegisterModels model)
         {
+            // model.Id will be set from the form's hidden input 'Id'
             if (ModelState.IsValid)
             {
-                // เตรียมข้อมูลสำหรับบันทึก
                 var upsertModel = new UpSertRegisterApiModels
                 {
                     MRegister = model,
@@ -306,21 +272,18 @@ namespace SME_WEB_ApiManagement.Controllers
                     LPerMapApi = new List<TApiPermisionMappingModels>()
                 };
 
-                // เรียก DAO เพื่อเพิ่มข้อมูล
+                // model.Id will be > 0 for edit, 0 for new
                 var result = SystemDAO.UpsertRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
 
                 if (result > 0)
                 {
-                    // เพิ่มสำเร็จ กลับไปหน้ารายการ
                     return RedirectToAction("RegisterList");
                 }
                 else
                 {
-                    // เพิ่มไม่สำเร็จ แสดง error
                     ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้");
                 }
             }
-            // ถ้าไม่ผ่าน validation หรือ error ให้กลับไปหน้าเดิม
             return View("RegisterList");
         }
         [HttpPost]
@@ -328,12 +291,11 @@ namespace SME_WEB_ApiManagement.Controllers
         {
             var upsertModel = new MRegisterModels
             {
-              Id = id,
-              FlagActive = flagActive
+                Id = id,
+                FlagActive = flagActive
             };
             var result = SystemDAO.UpdateStatusRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
 
-            // ส่งข้อความสำเร็จกลับไป
             return Json(new { success = true, message = "บันทึกข้อมูลสำเร็จ" });
         }
         [HttpPost]
@@ -346,5 +308,4 @@ namespace SME_WEB_ApiManagement.Controllers
                 return Json(new { success = false, message = "ไม่พบระบบหรือเกิดข้อผิดพลาด" });
         }
     }
-
 }

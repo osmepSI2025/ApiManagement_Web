@@ -31,6 +31,7 @@
                 </div>
                 <div class="col-md-6">
                     <input type="hidden" asp-for="MRegister.OrganizationCode" value="@Model.MRegister.OrganizationCode" />
+                    <input type="hidden" asp-for="MRegister.Id" value="@Model.MRegister.Id" />
                     <input type="hidden" asp-for="MRegister.CreateBy" value="@EmployeeId" />
                     <input type="hidden" asp-for="MRegister.UpdateBy" value="@EmployeeId" />
                     <select asp-for="MRegister.OrganizationCode" asp-items="vDdlOrg" class="form-control" disabled>
@@ -111,6 +112,7 @@
                 <div class="col-md-6">
                     <textarea class="form-control" rows="4" asp-for="MRegister.Note" placeholder="Enter your text here..."></textarea>
                     <span asp-validation-for="MRegister.Note" class="text-danger"></span>
+
                 </div>
             </div>
             @if (ViewBag.UserRole == "SUPERADMIN")
@@ -118,7 +120,9 @@
 
                 <div class="row">
                     <div class="col text-center">
-                        <button class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData" @(isSuperAdmin ? "" : "disabled")>บันทึก</button>                    <button class="btn btn_cancel" type="button">ยกเลิก</button>
+                        <button class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData" @(isSuperAdmin ? "" : "disabled")>บันทึก</button>
+                        <a class="btn btn_cancel" href="~/RegisterAPI/RegisterList">ยกเลิก</a>
+                
                     </div>
                 </div>
             }
