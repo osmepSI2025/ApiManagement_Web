@@ -354,7 +354,16 @@ namespace SME_WEB_ApiManagement.Controllers
                     }
                     result.LSysApi = xts;
 
+                    
+
                     result.MSystemInfo = SystemDAO.GetSystemInfoByCode(SystemCode, API_Path_Main + API_Path_Sub, null);
+
+                    TSystemApiMappingModels sysdata = new TSystemApiMappingModels();
+                    if (result.MSystemInfo!=null)
+                    {
+                        sysdata.FlagActive = result.MSystemInfo.FlagActive??false;
+                        result.TSystemAPI = sysdata;
+                    }
 
                 }
                 else if (((!string.IsNullOrEmpty(sortColumn)) || (!string.IsNullOrEmpty(sortOrder))) && (!string.IsNullOrEmpty(SystemCode)))
