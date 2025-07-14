@@ -398,6 +398,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     {
                         sysdata.FlagActive = result.MSystemInfo.FlagActive??false;
                         sysdata.OwnerSystemCode = SystemCode;
+                        sysdata.ApiNote = result.MSystemInfo.Note;
                         result.TSystemAPI = sysdata;
                     }
 

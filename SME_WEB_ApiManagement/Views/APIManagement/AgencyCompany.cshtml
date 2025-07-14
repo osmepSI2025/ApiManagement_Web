@@ -252,17 +252,25 @@
 @section Scripts {
     <script>
         function GetCreate() {
+            // Clear all modal fields
+            $("#InsMOrg_OrganizationId").val("");
+            $("#InsMOrg_OrganizationName").val("");
+            $("#InsMOrg_Description").val("");
+            $("#InsMOrg_FlagActive").prop("checked", false);
+            $("#InsMOrg_CreateBy").val("");
+            $("#InsMOrg_UpdateBy").val("");
+            // If you use select2 for OrganizationCode, clear it too
+            $("#InsMOrg_OrganizationCode").val("").trigger("change");
             $("#CreateModal").modal("show");
-        }
+        }   
 
         $(document).on('click', '.editbtn', function () {
             $("#InsMOrg_OrganizationId").val($(this).data("organizationid"));
-            // If you want to set OrganizationCode, uncomment the next line
             // $("#InsMOrg_OrganizationCode").val($(this).data("organizationcode")).trigger('change');
             $("#InsMOrg_OrganizationName").val($(this).data("organizationname"));
             $("#InsMOrg_Description").val($(this).data("description"));
-            // For checkbox, use .prop('checked', ...) for boolean values
-            $("#InsMOrg_FlagActive").prop('checked', $(this).data("flagactive") === true || $(this).data("flagactive") === "True");
+            // Fix: handle string/boolean for flagactive
+            $("#InsMOrg_FlagActive").prop('checked', String($(this).data("flagactive")).toLowerCase() === "true");
             $("#InsMOrg_CreateBy").val($(this).data("createby"));
             $("#InsMOrg_UpdateBy").val($(this).data("updateby"));
             $("#CreateModal").modal("show");

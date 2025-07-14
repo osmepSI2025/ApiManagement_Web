@@ -274,34 +274,40 @@ namespace SME_WEB_ApiManagement.Controllers
             searchCode.MRegister = og;
             var xlist = SystemDAO.GetRegister(searchCode, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
 
+    
             if (xlist.LRegis.Count > 0)
             {
-              // ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้ ข้อมูลซ้ำ");
-                ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้ ข้อมูลซ้ำ";
-                ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
-                ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
-            }
-            else
-            {
-                var upsertModel = new UpSertRegisterApiModels
+                if (model.Id == 0 || model.Id == null)
                 {
-                    MRegister = model,
-                    LSystem = new List<MSystemModels>(),
-                    LPerMapApi = new List<TApiPermisionMappingModels>()
-                };
-
-                var result = SystemDAO.UpsertRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
-
-                if (result > 0)
-                {
-                    return RedirectToAction("RegisterList");
+                    // ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้ ข้อมูลซ้ำ");
+                    ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้ ข้อมูลซ้ำ";
+                    ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+                    ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
                 }
-                else
+                else 
                 {
-                  //  ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้");
-                    ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้";
+                    var upsertModel = new UpSertRegisterApiModels
+                    {
+                        MRegister = model,
+                        LSystem = new List<MSystemModels>(),
+                        LPerMapApi = new List<TApiPermisionMappingModels>()
+                    };
+
+                    var result = SystemDAO.UpsertRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
+
+                    if (result > 0)
+                    {
+                        return RedirectToAction("RegisterList");
+                    }
+                    else
+                    {
+                        //  ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้");
+                        ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้";
+                    }
                 }
+               
             }
+            
 
             viewModel.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
             viewModel.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
