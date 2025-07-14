@@ -7,6 +7,7 @@
     var EmployeeId = ViewBag.EmployeeId;
 
     var EmployeeRole = ViewBag.EmployeeRole;
+    var PageReferrer = ViewBag.Referrer;
 }
 
 <form method="post" asp-action="SysMasterAPIConnectInbound" asp-controller="SysMasterAPI">
@@ -162,7 +163,8 @@
             @if (EmployeeRole == "SUPERADMIN")
             {
                 <div class="text-center m-t-10">
-                    <button class="btn btn_cancel">ยกเลิก</button>
+      
+                    <a class="btn btn_cancel" href="@PageReferrer">ยกเลิก</a>
                     <button type="button" class="btn btn_search text-color-botton m-r-10" id="saveData" value="saveData" name="saveData">บันทึก</button>
                   
                 </div>
@@ -170,7 +172,7 @@
             {
               
                   <div class="text-center m-t-10">
-             <a class="btn btn_search text-color-botton m-r-10" href="~/SysMasterAPI/SysMasterAPIInbound">กลับ</a>
+                    <a class="btn btn_search text-color-botton m-r-10" href="@PageReferrer">กลับ</a>
                 </div>
             }
 
@@ -233,10 +235,10 @@
                             </thead>
                             <tbody id="requestFieldsBody">
                                 <tr>
-                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiRequestParamater" /></td>
-                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiRequestParamaterType" /></td>
-                                    <td><textarea class="form-control" name="TSystemAPI.ApiRequestDescription" placeholder="กรุณาระบุ"></textarea></td>
-                                    <td><textarea class="form-control" name="TSystemAPI.ApiRequestExample" placeholder="กรุณาระบุ"></textarea></td>
+                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiRequestParamater" id="TSystemAPI_ApiRequestParamater_Modal" /></td>
+                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiRequestParamaterType" id="TSystemAPI_ApiRequestParamaterType_Modal" /></td>
+                                    <td><textarea class="form-control" name="TSystemAPI.ApiRequestDescription" id="TSystemAPI_ApiRequestDescription_Modal" placeholder="กรุณาระบุ"></textarea></td>
+                                    <td><textarea class="form-control" name="TSystemAPI.ApiRequestExample" id="TSystemAPI_ApiRequestExample_Modal" placeholder="กรุณาระบุ"></textarea></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -254,10 +256,10 @@
                             </thead>
                             <tbody id="responseFieldsBody">
                                 <tr>
-                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiResponseParamater" /></td>
-                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiResponseParamaterType" /></td>
-                                    <td><textarea class="form-control" name="TSystemAPI.ApiResponseDescription" placeholder="กรุณาระบุ"></textarea></td>
-                                    <td><textarea class="form-control" name="TSystemAPI.ApiResponseExample" placeholder="กรุณาระบุ"></textarea></td>
+                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiResponseParamater" id="TSystemAPI_ApiResponseParamater_Modal" /></td>
+                                    <td><input type="text" class="form-control" name="TSystemAPI.ApiResponseParamaterType" id="TSystemAPI_ApiResponseParamaterType_Modal" /></td>
+                                    <td><textarea class="form-control" name="TSystemAPI.ApiResponseDescription" id="TSystemAPI_ApiResponseDescription_Modal" placeholder="กรุณาระบุ"></textarea></td>
+                                    <td><textarea class="form-control" name="TSystemAPI.ApiResponseExample" id="TSystemAPI_ApiResponseExample_Modal" placeholder="กรุณาระบุ"></textarea></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -348,6 +350,16 @@
             document.getElementById('TSystemAPI_ApiServiceName_Modal').value = '';
             document.getElementById('TSystemAPI_ApiServiceCode_Modal').value = '';
             document.getElementById('TSystemAPI_EndPoint_Modal').value = '';
+
+                      document.getElementById('TSystemAPI_ApiRequestParamater_Modal').value = '';
+                document.getElementById('TSystemAPI_ApiRequestParamaterType_Modal').value = '';
+                  document.getElementById('TSystemAPI_ApiRequestDescription_Modal').value = '';
+                    document.getElementById('TSystemAPI_ApiRequestExample_Modal').value = '';
+
+                      document.getElementById('TSystemAPI_ApiResponseParamater_Modal').value = '';
+                        document.getElementById('TSystemAPI_ApiResponseParamaterType_Modal').value = '';
+                          document.getElementById('TSystemAPI_ApiResponseDescription_Modal').value = '';
+                            document.getElementById('TSystemAPI_ApiResponseExample_Modal').value = '';
             document.getElementById('apiActive').checked = false;
 
             var myModal = new bootstrap.Modal(document.getElementById('CreateApiModal'));
@@ -367,6 +379,18 @@
                                 document.getElementById('TSystemAPI_ApiServiceName_Modal').value = data.apiServiceName;
                                 document.getElementById('TSystemAPI_ApiServiceCode_Modal').value = data.apiServiceCode;
                                 document.getElementById('TSystemAPI_EndPoint_Modal').value = data.endPoint;
+
+
+                                          document.getElementById('TSystemAPI_ApiRequestParamater_Modal').value = data.apiRequestParamater;
+                                               document.getElementById('TSystemAPI_ApiRequestParamaterType_Modal').value = data.apiRequestParamaterType;
+                                                    document.getElementById('TSystemAPI_ApiRequestDescription_Modal').value = data.apiRequestDescription;
+                                                         document.getElementById('TSystemAPI_ApiRequestExample_Modal').value = data.apiRequestExample;
+
+                                                              document.getElementById('TSystemAPI_ApiResponseParamater_Modal').value = data.apiResponseParamater;
+                                                                   document.getElementById('TSystemAPI_ApiResponseParamaterType_Modal').value = data.apiResponseParamaterType;
+                                                                        document.getElementById('TSystemAPI_ApiResponseDescription_Modal').value = data.apiResponseDescription;
+                                                                             document.getElementById('TSystemAPI_ApiResponseExample_Modal').value = data.apiResponseExample;
+
                                 document.getElementById('apiActive').checked = data.flagActive;
 
                                 // set other fields if needed

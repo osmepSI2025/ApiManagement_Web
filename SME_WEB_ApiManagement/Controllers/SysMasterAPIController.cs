@@ -45,6 +45,8 @@ namespace SME_WEB_ApiManagement.Controllers
             #region panging
             int curpage = 0;
             int totalpage = 0;
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
 
             if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
             if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
@@ -106,7 +108,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     model.FlagSearch = "SEARCH";
                     model.FlagActive = null;
                     model.CreateBy = HttpContext.Session.GetString("EmployeeId");
-                    model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+                 //   model.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
 
                     result.LSystem = SystemDAO.GetSystemBySearchMaster(model, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
                     totalCount = SystemDAO.GetSystemBySearchMaster(model, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
@@ -252,11 +254,44 @@ namespace SME_WEB_ApiManagement.Controllers
             string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
             , string sortColumn = null, string sortOrder = null, string saveSubData = null)
         {
-
+            //Uri referrerUri = Request.UrlReferrer;
+            //string referrerUrl = referrerUri.ToString();
+            //// You can store this in ViewData, ViewBag, TempData, or a ViewModel
+            //ViewBag.Referrer = referrerUrl;
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
             #region panging
             int curpage = 0;
+            // Replace the following line:
+            //   Uri referrerUri = Request.UrlReferrer;
+
+            string referrerUrl = null; // Initialize to null
+
+            // Check if the "Referer" header exists and is not empty
+            if (Request.Headers.ContainsKey("Referer") && !string.IsNullOrEmpty(Request.Headers["Referer"]))
+            {
+                try
+                {
+                    // Get the referrer string from the header
+                    string referrerString = Request.Headers["Referer"].ToString();
+
+                    // Attempt to create a Uri object (for validation and easier parsing if needed)
+                    Uri referrerUri = new Uri(referrerString);
+
+                    // If the Uri creation is successful, store the absolute URI
+                    referrerUrl = referrerUri.AbsoluteUri;
+                }
+                catch (UriFormatException)
+                {
+                    // Handle cases where the Referer header contains an invalid URI format
+                    referrerUrl = "Invalid Referer URI format.";
+                }
+            }
+
+            // Assign the referrer URL to ViewBag
+            // If referrerUrl is still null, it means no valid referrer was found
+            ViewBag.Referrer = referrerUrl ?? "No referrer information available.";
+
             int totalpage = 0;
             //set data to view
             ViewSystemApiModels result = new ViewSystemApiModels
@@ -362,6 +397,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     if (result.MSystemInfo!=null)
                     {
                         sysdata.FlagActive = result.MSystemInfo.FlagActive??false;
+                        sysdata.OwnerSystemCode = SystemCode;
                         result.TSystemAPI = sysdata;
                     }
 
@@ -563,7 +599,9 @@ namespace SME_WEB_ApiManagement.Controllers
                     apiResponseParamater = result.ApiResponseParamater,
                     apiResponseParamaterType = result.ApiResponseParamaterType,
                     apiResponseDescription = result.ApiResponseDescription,
-                    apiResponseExample = result.ApiResponseExample
+                    apiResponseExample = result.ApiResponseExample,
+                     
+
                 });
             else
                 return Json(new { success = false, message = "ไม่พบข้อมูล" });

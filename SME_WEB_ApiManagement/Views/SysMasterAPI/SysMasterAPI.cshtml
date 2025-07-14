@@ -4,6 +4,8 @@
     var vDdlStatus = ViewBag.vDdlStatus;
     var vDdlOrg = ViewBag.vDdlOrg;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var EmployeeId = ViewBag.EmployeeId;
+    var EmployeeRole = ViewBag.EmployeeRole;
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -61,9 +63,15 @@
         <div class="card-custom">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="card-title mb-0">รายการระบบ API</div>
-                <button type="button" class="btn btn-primary btn-custom" onclick="GetCreate();">
-                    <i class="fa fa-plus"></i> สร้าง
-                </button>
+
+                @if (EmployeeRole=="SUPERADMIN")
+                {
+                    <button type="button" class="btn btn-primary btn-custom" onclick="GetCreate();">
+                        <i class="fa fa-plus"></i> สร้าง
+                    </button>
+
+                }
+             
             </div>
             <div class="table-responsive">
                 <table class="table table-custom table-bordered">
@@ -75,8 +83,12 @@
                             <th>สถานะ API</th>
                             <th>วันที่สร้าง</th>
                             <th>วันที่แก้ไขล่าสุด</th>
-                            <th>Update Status</th>
-                            <th></th>
+                            @if (EmployeeRole == "SUPERADMIN")
+                            {
+                                <th>Update Status</th>
+                                <th></th>
+                            }
+                          
                         </tr>
                     </thead>
                     <tbody>
@@ -104,29 +116,34 @@
                                     </td>
                                     <td>@(w.CreateDate.HasValue? w.CreateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
                                     <td>@(w.UpdateDate.HasValue? w.UpdateDate.Value.ToString("dd/MM/yyyy") : "-")</td>
-                                    <td class="text-center">
-                                        <label class="switch">
-                                            <input type="checkbox" class="active-toggle"
-                                                   data-id="@w.Id"
-                                                   @(w.FlagActive.HasValue && w.FlagActive.Value ? "checked" : "") />
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="action-btn editbtn"
-                                                data-id="@w.Id"
-                                                data-systemname="@w.SystemName"
-                                                data-flagactive="@w.FlagActive"
-                                                data-ownersystemcode="@w.OwnerSystemCode"
-                                                data-startdate="@(w.StartDate?.ToString("yyyy-MM-dd"))"
-                                                data-enddate="@(w.EndDate?.ToString("yyyy-MM-dd"))"
-                                                title="แก้ไข">
-                                            <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
-                                        </button>
-                                        <button type="button" class="action-btn delete" onclick="deleteSystem(@w.Id)" title="ลบ">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
+
+                                    @if (EmployeeRole == "SUPERADMIN")
+                                    {
+                                        <td class="text-center">
+                                            <label class="switch">
+                                                <input type="checkbox" class="active-toggle"
+                                                       data-id="@w.Id"
+                                                       @(w.FlagActive.HasValue && w.FlagActive.Value ? "checked" : "") />
+                                                <span class="slider"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="action-btn editbtn"
+                                                    data-id="@w.Id"
+                                                    data-systemname="@w.SystemName"
+                                                    data-flagactive="@w.FlagActive"
+                                                    data-ownersystemcode="@w.OwnerSystemCode"
+                                                    data-startdate="@(w.StartDate?.ToString("yyyy-MM-dd"))"
+                                                    data-enddate="@(w.EndDate?.ToString("yyyy-MM-dd"))"
+                                                    title="แก้ไข">
+                                                <i class="fas fa-edit" style="color: #34A5EB; cursor: pointer;"></i>
+                                            </button>
+                                            <button type="button" class="action-btn delete" onclick="deleteSystem(@w.Id)" title="ลบ">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    }
+                                  
                                 </tr>
                                 index++;
                             }
