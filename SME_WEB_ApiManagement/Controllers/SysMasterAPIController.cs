@@ -387,9 +387,9 @@ namespace SME_WEB_ApiManagement.Controllers
                     {
                         xts = new List<TSystemApiMappingModels>();
                     }
-                    result.LSysApi = xts;
+                    result.LSysApi = xts.Distinct().ToList();
 
-                    
+
 
                     result.MSystemInfo = SystemDAO.GetSystemInfoByCode(SystemCode, API_Path_Main + API_Path_Sub, null);
 
@@ -420,7 +420,7 @@ namespace SME_WEB_ApiManagement.Controllers
                         "CreatedDate" => sortOrder == "asc" ? data.OrderBy(x => x.CreateDate) : data.OrderByDescending(x => x.CreateDate),
                         _ => sortOrder == "asc" ? data.OrderBy(x => x.Id) : data.OrderByDescending(x => x.Id),
                     };
-                    result.LSysApi = sortedData.ToList(); // ✅ แปลงเป็น List<T>
+                    result.LSysApi = sortedData.Distinct().ToList(); // ✅ แปลงเป็น List<T>
                 }
                 else
                 {

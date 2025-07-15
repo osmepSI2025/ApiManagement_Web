@@ -274,7 +274,7 @@ namespace SME_WEB_ApiManagement.Controllers
             searchCode.MRegister = og;
             var xlist = SystemDAO.GetRegister(searchCode, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize, null);
 
-    
+
             if (xlist.LRegis.Count > 0)
             {
                 if (model.Id == 0 || model.Id == null)
@@ -284,7 +284,7 @@ namespace SME_WEB_ApiManagement.Controllers
                     ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
                     ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
                 }
-                else 
+                else
                 {
                     var upsertModel = new UpSertRegisterApiModels
                     {
@@ -305,11 +305,32 @@ namespace SME_WEB_ApiManagement.Controllers
                         ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้";
                     }
                 }
-               
-            }
-            
 
-            viewModel.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
+            }
+            else {
+
+                var upsertModel = new UpSertRegisterApiModels
+                {
+                    MRegister = model,
+                    LSystem = new List<MSystemModels>(),
+                    LPerMapApi = new List<TApiPermisionMappingModels>()
+                };
+
+                var result = SystemDAO.UpsertRegister(upsertModel, API_Path_Main + API_Path_Sub, null);
+
+                if (result > 0)
+                {
+                    return RedirectToAction("RegisterList");
+                }
+                else
+                {
+                    //  ModelState.AddModelError("", "ไม่สามารถเพิ่มข้อมูลได้");
+                    ViewBag.PopupError = "ไม่สามารถเพิ่มข้อมูลได้";
+                }
+            }
+
+
+                viewModel.vDdlStatus = Service_CenterDAO.GetLookups("STATUS", API_Path_Main + API_Path_Sub, null);
             viewModel.vDdlOrg = Service_CenterDAO.GetDropdownOrganization(API_Path_Main + API_Path_Sub, null);
             ViewBag.vDdlStatus = new SelectList(viewModel.vDdlStatus.DropdownList.OrderBy(x => x.Code), "Code", "Name");
             ViewBag.vDdlOrg = new SelectList(viewModel.vDdlOrg.DropdownList.OrderBy(x => x.Code), "Code", "Name");
