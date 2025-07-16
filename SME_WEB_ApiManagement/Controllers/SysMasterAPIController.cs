@@ -42,11 +42,17 @@ namespace SME_WEB_ApiManagement.Controllers
         public IActionResult SysMasterAPI(ViewSystemApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
             string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
+
             #region panging
             int curpage = 0;
             int totalpage = 0;
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+  
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
             if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
@@ -160,6 +166,13 @@ namespace SME_WEB_ApiManagement.Controllers
     string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+           
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             #region panging
             int curpage = 0;
             int totalpage = 0;
@@ -254,12 +267,16 @@ namespace SME_WEB_ApiManagement.Controllers
             string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
             , string sortColumn = null, string sortOrder = null, string saveSubData = null)
         {
-            //Uri referrerUri = Request.UrlReferrer;
-            //string referrerUrl = referrerUri.ToString();
-            //// You can store this in ViewData, ViewBag, TempData, or a ViewModel
-            //ViewBag.Referrer = referrerUrl;
+
+         
             ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
             ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+       
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             #region panging
             int curpage = 0;
             // Replace the following line:
@@ -459,6 +476,13 @@ namespace SME_WEB_ApiManagement.Controllers
     string searchNews = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null, string SystemCode = null
     , string sortColumn = null, string sortOrder = null)
         {
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             #region panging
             int curpage = 0;
             int totalpage = 0;

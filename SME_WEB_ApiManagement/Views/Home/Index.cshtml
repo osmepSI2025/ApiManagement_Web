@@ -140,55 +140,74 @@ else
             </div>
         </div>
        @if(EmpDetail !=null)
-       {
-            <div class="row ">
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card-box">
-                        <a id="picjob" runat="server" href="../SysMasterAPI/SysMasterAPIInbound">
-                            <div>
-                                <img src="~/img/system.png" alt="">
-                                <span>API Inbound</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 .col-sm-12">
-                    <div class="card-box">
-                        <a id="PicEmp" href="../RegisterAPI/RegisterList" runat="server">
-                            <div>
-                                <img src="~/img/registered.png" alt="">
-                                <span>API Outbound</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-             
-                  <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card-box">
-                        <a href="../ErrorApi/Index" id="Errorstatus" runat="server">
-                        <div>
-                            <img src="~/img/error.png" alt="">
-                            <span>Error list</span>
+        {
+            if (EmpDetail.RoleCode == "ADMIN" || EmpDetail.RoleCode == "SUPERADMIN")
+            {
+                <div class="row ">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="card-box">
+                            <a id="picjob" href="../SysMasterAPI/SysMasterAPIInbound">
+                                <div>
+                                    <img src="~/img/system.png" alt="">
+                                    <span>API Inbound</span>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-            </div>
-
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card-box">
-                        <a id="picjob" runat="server" href="~/ApiReference/index">
-                            <div>
-                                <img src="~/img/business_1.png" alt="">
-                                <span>Api Reference</span>
-                            </div>
-                        </a>
                     </div>
+                    <div class="col-lg-3 col-md-6 .col-sm-12">
+                        <div class="card-box">
+                            <a id="PicEmp" href="../RegisterAPI/RegisterList" runat="server">
+                                <div>
+                                    <img src="~/img/registered.png" alt="">
+                                    <span>API Outbound</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="card-box">
+                            <a href="../ErrorApi/Index" id="Errorstatus" runat="server">
+                                <div>
+                                    <img src="~/img/error.png" alt="">
+                                    <span>Error list</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="card-box">
+                            <a id="picjob" runat="server" href="~/ApiReference/index">
+                                <div>
+                                    <img src="~/img/business_1.png" alt="">
+                                    <span>Api Reference</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+
+
                 </div>
-
-
-            
+            }
+            else
+            {
+              <div class="row ">
+                    <div class="header_content">
+                        <h1>ไม่มีสิทธิ์เข้าใช้งานระบบ ติดต่อเจ้าหน้าที่</h1>
+                    </div>
             </div>
+            
+            }
+        }
+       else
+       {
+           <div class="row ">
+            <div class="header_content">
+                <h1>ไม่มีสิทธิ์เข้าใช้งานระบบ ติดต่อเจ้าหน้าที่</h1>
+            </div>
+        </div>
        }
-       
     </div>
 </div>

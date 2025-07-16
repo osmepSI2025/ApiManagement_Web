@@ -48,6 +48,14 @@ namespace SME_WEB_ApiManagement.Controllers
             ViewBag.EmpDetail = HttpContext.Session.GetString("EmpDetail");
             var empDetailJson = HttpContext.Session.GetString("EmpDetail");
 
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
             if (!string.IsNullOrEmpty(empDetailJson))
             {
                 var empDetailObj = JsonSerializer.Deserialize<EmployeeRoleModels>(empDetailJson);

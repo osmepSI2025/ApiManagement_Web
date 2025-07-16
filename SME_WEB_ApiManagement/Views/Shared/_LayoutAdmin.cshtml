@@ -39,40 +39,44 @@
                 <div class="logo">
                     <img src="~/img/logo-th-01.png" alt="โลโก้" class="img-fluid" />
                 </div>
+
                 @if (empDetail != null)
                 {
-
-                    <ul class="nav flex-column px-3">
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/ApiReference/index"><i class="fas fa-newspaper"></i>API Reference</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/SysMasterAPI/SysMasterAPIInbound"><i class="fas fa-newspaper"></i>API Inbound</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/RegisterAPI/RegisterList"><i class="fas fa-thumbtack"></i>API Outbound</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/ErrorApi/Index"><i class="fas fa-images"></i>Error list</a>
-                        </li>
-                        @*   <li class="nav-item">
-                            <a class="nav-link" href="~/LineOA/LineLogin"><i class="fas fa-people-line"></i>Login with LINE</a>
-                        </li> *@
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/SysMasterAPI/SysMasterAPI"><i class="fas fa-passport"></i>Api Master</a>
-                        </li>
-                        @if (empDetail.RoleCode == "SUPERADMIN")
+                    if (!string.IsNullOrEmpty(empDetail.RoleCode))
+                    {
+                        if (empDetail.RoleCode == "ADMIN" || empDetail.RoleCode == "SUPERADMIN")
                         {
-                          
-                            <li class="nav-item">
-                                <a class="nav-link" href="~/APIManagement/AgencyCompany"><i class="fas fa-window-restore"></i>เพิ่มหน่วยงานภายนอก</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="~/UserManagement/index"><i class="fas fa-users"></i>กำหนดสิทธิ์ผู้ใช้งาน</a>
-                            </li>
+                            <ul class="nav flex-column px-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="~/ApiReference/index"><i class="fas fa-newspaper"></i>API Reference</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="~/SysMasterAPI/SysMasterAPIInbound"><i class="fas fa-newspaper"></i>API Inbound</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="~/RegisterAPI/RegisterList"><i class="fas fa-thumbtack"></i>API Outbound</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="~/ErrorApi/Index"><i class="fas fa-images"></i>Error list</a>
+                                </li>
+                                @*   <li class="nav-item">
+                <a class="nav-link" href="~/LineOA/LineLogin"><i class="fas fa-people-line"></i>Login with LINE</a>
+                </li> *@
+                                <li class="nav-item">
+                                    <a class="nav-link" href="~/SysMasterAPI/SysMasterAPI"><i class="fas fa-passport"></i>Api Master</a>
+                                </li>
+                                @if (empDetail.RoleCode == "SUPERADMIN")
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="~/APIManagement/AgencyCompany"><i class="fas fa-window-restore"></i>เพิ่มหน่วยงานภายนอก</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="~/UserManagement/index"><i class="fas fa-users"></i>กำหนดสิทธิ์ผู้ใช้งาน</a>
+                                    </li>
+                                }
+                            </ul>
                         }
-
-                    </ul>
+                    }
                 }
 
                 <div class="sidebar-bottom px-3">

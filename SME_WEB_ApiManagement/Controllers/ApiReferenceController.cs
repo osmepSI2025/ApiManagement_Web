@@ -40,6 +40,13 @@ namespace SME_WEB_ApiManagement.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewRegisterApiModels result = new ViewRegisterApiModels();
             try {
                 TApiPermisionMappingModels mo = new TApiPermisionMappingModels();
@@ -58,6 +65,13 @@ namespace SME_WEB_ApiManagement.Controllers
         }
         public IActionResult Detail(int id)
         {
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             TSystemApiMappingModels mo = new TSystemApiMappingModels();
             mo.Id = id;
             var apiList = SystemDAO.GetTSystemMappingBySearch(mo, API_Path_Main + API_Path_Sub, null);

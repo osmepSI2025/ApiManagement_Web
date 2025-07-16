@@ -97,6 +97,13 @@ namespace SME_WEB_ApiManagement.Controllers
     ViewErroApiModels vm, string previous, string first, string next, string last, string hidcurrentpage, string hidtotalpage,
     string searchData = null, string clearSearcData = null, string DeleteData = null, string saveData = null, string cancelData = null, string editData = null)
         {
+            ViewBag.EmployeeId = HttpContext.Session.GetString("EmployeeId");
+            ViewBag.EmployeeRole = HttpContext.Session.GetString("EmployeeRole");
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("EmployeeRole")))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             int curpage = 1;
             if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
 
