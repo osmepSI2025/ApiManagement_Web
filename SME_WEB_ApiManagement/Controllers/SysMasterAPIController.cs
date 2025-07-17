@@ -72,10 +72,19 @@ namespace SME_WEB_ApiManagement.Controllers
                 if (!string.IsNullOrEmpty(searchData)|| !string.IsNullOrEmpty(previous) || !string.IsNullOrEmpty(first)
                     || !string.IsNullOrEmpty(next) || !string.IsNullOrEmpty(last))
                 {
-                    result.LSystem = SystemDAO.GetSystemBySearchMaster(vm.MSystem, API_Path_Main + API_Path_Sub, null);
+                    MSystemModels search = new MSystemModels();
+                    search.SystemName = vm.MSystem.SystemName;
+                    search.FlagActive = vm.MSystem.FlagActive;
+                    search.StartDate = vm.MSystem.StartDate;
+                    search.EndDate = vm.MSystem.EndDate;
+                    //search.rowFetch = PageSize;
+                    //search.rowOFFSet = curpage;
+                    search.FlagSearch = "SEARCH";
+
+                    result.LSystem = SystemDAO.GetSystemBySearchMaster(search, API_Path_Main + API_Path_Sub, "N", currentPageNumber,PageSize);
                     if (result.LSystem != null)
                     {
-                        totalCount = SystemDAO.GetSystemBySearchMaster(vm.MSystem, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
+                        totalCount = SystemDAO.GetSystemBySearchMaster(search, API_Path_Main + API_Path_Sub, "Y", 0, 0, null).Count();
                     }
                     else
                     {
@@ -411,12 +420,47 @@ namespace SME_WEB_ApiManagement.Controllers
                     result.MSystemInfo = SystemDAO.GetSystemInfoByCode(SystemCode, API_Path_Main + API_Path_Sub, null);
 
                     TSystemApiMappingModels sysdata = new TSystemApiMappingModels();
-                    if (result.MSystemInfo!=null)
+                    if (result.MSystemInfo.SystemCode != null)
                     {
-                        sysdata.FlagActive = result.MSystemInfo.FlagActive??false;
+                        sysdata.FlagActive = result.MSystemInfo.FlagActive ?? false;
                         sysdata.OwnerSystemCode = SystemCode;
                         sysdata.ApiNote = result.MSystemInfo.Note;
                         result.TSystemAPI = sysdata;
+                    }
+                    else
+                    {
+                        MSystemModels msys = new MSystemModels();
+                        MSystemInfoModels msysinfo = new MSystemInfoModels();
+                        msys.SystemCode = SystemCode;
+
+                        var dfData = SystemDAO.GetSystemBySearchMaster(msys, API_Path_Main + API_Path_Sub, "N", currentPageNumber, PageSize);
+
+                        if (dfData == null || dfData.Any())
+                        {
+                    
+                            sysdata.FlagActive = dfData.ToList()[0].FlagActive ?? false;
+                            sysdata.OwnerSystemCode = SystemCode;
+                            sysdata.ApiNote = "";
+                            result.TSystemAPI = sysdata;
+
+                            msysinfo.SystemCode = SystemCode;
+
+                            result.MSystemInfo = msysinfo;
+
+
+                            result.MSystem = msys;
+                        }
+                        else 
+                        {
+                            sysdata.FlagActive = false;
+                            sysdata.OwnerSystemCode = SystemCode;
+                            sysdata.ApiNote = "";
+                            result.TSystemAPI = sysdata;
+                            msysinfo.SystemCode = SystemCode;
+                            result.MSystemInfo = msysinfo;
+
+                        }
+
                     }
 
                 }

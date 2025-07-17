@@ -51,6 +51,8 @@
                     <input type="hidden" asp-for="MRegister.Id" value="@Model.MRegister.Id" />
                     <input type="hidden" asp-for="MRegister.CreateBy" value="@EmployeeId" />
                     <input type="hidden" asp-for="MRegister.UpdateBy" value="@EmployeeId" />
+                    <input type="hidden" asp-for="MRegister.StartDate" value="@Model.MRegister.EndDate" />
+                    <input type="hidden" asp-for="MRegister.EndDate" value="@Model.MRegister.EndDate" />
                     <select asp-for="MRegister.OrganizationCode" asp-items="vDdlOrg" class="form-control" disabled>
                         <option value="">-- กรุณาเลือก --</option>
                     </select>
@@ -61,13 +63,13 @@
                     <label class="col-form-label">วันเริ่มต้น :</label>
                 </div>
                 <div class="col-md-3">
-                    <input class="form-control" type="date" asp-for="MRegister.StartDate" />
+                    <input class="form-control" type="date" asp-for="MRegister.StartDate" disabled />
                 </div>
                 <div class="col-md-3 text-end">
                     <label class="col-form-label">วันสิ้นสุด :</label>
                 </div>
                 <div class="col-md-3">
-                    <input class="form-control" type="date" asp-for="MRegister.EndDate" />
+                    <input class="form-control" type="date" asp-for="MRegister.EndDate" disabled />
                 </div>
             </div>
             <div class="row mb-3">
