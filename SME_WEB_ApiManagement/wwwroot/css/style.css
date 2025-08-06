@@ -72,13 +72,18 @@ body {
     text-align: center;
 }
 
-.sidebar .nav-link.active,
+/*.sidebar .nav-link.active,
 .sidebar .nav-link:hover {
     background: var(--primary-color);
     color: #fff;
     transform: translateX(5px);
-}
-
+}*/
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+        background: var(--hover-color); /* เปลี่ยนเป็นสีธีม */
+        color: #fff;
+        transform: translateX(5px);
+    }
 .sidebar .logo {
     padding: 24px 0 16px 0;
     text-align: center;

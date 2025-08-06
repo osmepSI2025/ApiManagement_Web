@@ -77,7 +77,12 @@ builder.Services.AddHttpClient<CallAPIService>();
 // Authorization services
 builder.Services.AddAuthorization(); // Call this only once
 // builder.Services.AddControllers(); // This is typically included by AddControllersWithViews(), can be removed if not explicitly needed for API controllers only
-
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // --- Configure the HTTP request pipeline (Middleware Order is CRITICAL) ---

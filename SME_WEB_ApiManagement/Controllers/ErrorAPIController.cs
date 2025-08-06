@@ -116,9 +116,12 @@ namespace SME_WEB_ApiManagement.Controllers
                 // Get total count first
                 int totalCount;
                 int totalpage = 0;
-               
+
 
                 // Update currentPageNumber based on button
+
+                if (!string.IsNullOrEmpty(hidcurrentpage)) curpage = Convert.ToInt32(hidcurrentpage);
+                if (!string.IsNullOrEmpty(hidtotalpage)) totalpage = Convert.ToInt32(hidtotalpage);
                 if (!string.IsNullOrEmpty(first)) currentPageNumber = 1;
                 else if (!string.IsNullOrEmpty(previous)) currentPageNumber = (curpage == 1) ? 1 : curpage - 1;
                 else if (!string.IsNullOrEmpty(next)) currentPageNumber = (curpage == totalpage) ? totalpage : curpage + 1;

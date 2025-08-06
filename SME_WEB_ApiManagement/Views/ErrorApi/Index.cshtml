@@ -119,6 +119,7 @@
                             <i class="fa fa-angle-left"></i>
                         </button>
                         <span>Page</span>
+                        <input type="hidden" name="hidtotalpage" id="hidtotalpage" value="@Model.PageModel.TotalPage" />
                         <input type="text" name="hidcurrentpage" id="hidcurrentpage" value="@Model.PageModel.CurrentPageNumber" readonly />
                         <span>of @Model.PageModel.TotalPage</span>
                         <button type="submit" class="btn btn-light" name="next" value="next" title="ถัดไป" @(Model.PageModel.CurrentPageNumber == Model.PageModel.TotalPage ? "disabled" : "")>
