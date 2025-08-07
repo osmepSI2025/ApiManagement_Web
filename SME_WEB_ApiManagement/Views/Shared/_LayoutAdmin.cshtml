@@ -56,6 +56,8 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="~/RegisterAPI/RegisterList"><i class="fas fa-thumbtack"></i>API Outbound</a>
                                 </li>
+                                @if (empDetail.RoleCode == "SUPERADMIN")
+                                {
                                 <li class="nav-item">
                                     <a class="nav-link" href="~/ErrorApi/Index"><i class="fas fa-images"></i>Error list</a>
                                 </li>
@@ -65,8 +67,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="~/SysMasterAPI/SysMasterAPI"><i class="fas fa-passport"></i>Api Master</a>
                                 </li>
-                                @if (empDetail.RoleCode == "SUPERADMIN")
-                                {
+                                
                                     <li class="nav-item">
                                         <a class="nav-link" href="~/APIManagement/AgencyCompany"><i class="fas fa-window-restore"></i>เพิ่มหน่วยงานภายนอก</a>
                                     </li>
