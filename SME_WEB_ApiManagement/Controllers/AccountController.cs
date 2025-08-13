@@ -66,14 +66,13 @@ namespace SME_WEB_ApiManagement.Controllers
         {
             _logger.LogInformation("User is logging out.");
 
-            await HttpContext.SignOutAsync("Saml2");
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync("Saml2", new AuthenticationProperties
+            {
+                RedirectUri = "https://si.sme.go.th/"
+            });
 
-            // ดึงค่า SingleLogoutServiceUrl
-            var logoutUrl = _configuration["Saml2:Saml2:SingleLogoutServiceUrl"];
-            return Redirect(logoutUrl);
+            return new EmptyResult(); // The middleware will handle the redirect
         }
-
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ViewClaims()
